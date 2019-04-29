@@ -1,0 +1,21 @@
+{
+  "name": "@git-data-proxy/root",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Loïc Mahieu <mahieuloic@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "tslint -p .",
+    "build": "lerna run --stream build",
+    "start": "lerna run --stream --no-sort start"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^3.13.4",
+    "tslint": "^5.16.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.4.5"
+  }
+}

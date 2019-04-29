@@ -2,38 +2,7 @@ import bodyParser from "body-parser";
 import Boom from "boom";
 import { Application, ErrorRequestHandler } from "express";
 import asyncHandler from "express-async-handler";
-import { Backend } from "./backend/interface";
-
-export interface IBeforeData {
-  path?: string;
-  projectId: string;
-  ref?: string;
-  serverOptions: IServerOptions;
-}
-
-interface IServerOptions extends IServerOptionsAuth {
-  backend: Backend;
-  prefix?: string;
-  before: (data: IBeforeData) => Promise<void>;
-}
-
-export interface IServerOptionsAuth {
-  authCheck: (authorizationHeader: string) => Promise<boolean>;
-  authLogin: (body: any) => Promise<string | undefined>;
-}
-
-export interface ICommitAction {
-  action: "create" | "delete" | "move" | "update";
-  file_path: string;
-  content?: string;
-  encoding?: string;
-}
-
-export interface ICommitBody {
-  actions: ICommitAction[];
-  branch: string;
-  commit_message: string;
-}
+import { ICommitBody, IServerOptions } from "./types";
 
 export async function applyMiddlewares(
   app: Application,
@@ -81,7 +50,7 @@ const authenticate = (serverOptions: IServerOptions) =>
       serverOptions,
     });
 
-    const token = await serverOptions.authLogin(req.body);
+    const token = await serverOptions.auth.authLogin(req.body);
 
     if (!token) {
       throw Boom.unauthorized();
@@ -105,7 +74,7 @@ const tree = (serverOptions: IServerOptions) =>
 
     if (
       !authorization ||
-      !(await serverOptions.authCheck(authorization))
+      !(await serverOptions.auth.authCheck(authorization))
     ) {
       throw Boom.unauthorized();
     }
@@ -137,7 +106,7 @@ const readFile = (serverOptions: IServerOptions) =>
 
     if (
       !authorization ||
-      !(await serverOptions.authCheck(authorization))
+      !(await serverOptions.auth.authCheck(authorization))
     ) {
       throw Boom.unauthorized();
     }
@@ -176,7 +145,7 @@ const commit = (serverOptions: IServerOptions) =>
 
     if (
       !authorization ||
-      !(await serverOptions.authCheck(authorization))
+      !(await serverOptions.auth.authCheck(authorization))
     ) {
       throw Boom.unauthorized();
     }

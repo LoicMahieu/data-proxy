@@ -1,5 +1,5 @@
 import { OutgoingHttpHeaders } from "http";
-import { ICommitBody } from "../server";
+import { ICommitBody } from "../types";
 
 interface IBackendBaseOptions {
   projectId: string;

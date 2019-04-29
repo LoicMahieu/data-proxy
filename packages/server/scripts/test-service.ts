@@ -10,18 +10,18 @@ app.use(morgan("tiny"));
 app.use(cors());
 
 applyMiddlewares(app, {
+  auth: authBaseMap({
+    getAuthMap: async () => ({
+      loic: "$2b$10$4Dj1OSSTi4WwIRjbVtbYlupzpNPTjsmqkwMRrIO1oBKGpRv3Zxx0S",
+    }),
+    jwtSecret: "foobar",
+  }),
   backend: new BackendGitlab({
     privateToken: process.env.GITLAB_PRIVATE_TOKEN || "",
   }),
   before: beforeCheckPermissions({
     pathMatch: "data/**/*",
     projectId: "LoicMahieu/test-react-admin",
-  }),
-  ...authBaseMap({
-    getAuthMap: async () => ({
-      loic: "$2b$10$4Dj1OSSTi4WwIRjbVtbYlupzpNPTjsmqkwMRrIO1oBKGpRv3Zxx0S",
-    }),
-    jwtSecret: "foobar",
   }),
 });
 

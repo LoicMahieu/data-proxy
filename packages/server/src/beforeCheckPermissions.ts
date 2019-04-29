@@ -1,6 +1,6 @@
 import Boom from "boom";
 import micromatch from "micromatch";
-import { IBeforeData } from "./server";
+import { IBeforeData } from "./types";
 
 interface IBeforeCheckPermissionsOptions {
   projectId: string;

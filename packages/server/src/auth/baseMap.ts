@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import { Omit } from "type-fest";
-import { IServerOptionsAuth } from "../server";
-import { authBase, IAuthBaseOptions } from "./base";
+import { authBase, IAuthBackend, IAuthBaseOptions } from "./base";
 
 interface IAuthBaseMapOptions extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {
   getAuthMap: () => Promise<IAuthMap>;
@@ -11,7 +10,7 @@ interface IAuthMap {
   [login: string]: string;
 }
 
-export const authBaseMap = (options: IAuthBaseMapOptions): IServerOptionsAuth =>
+export const authBaseMap = (options: IAuthBaseMapOptions): IAuthBackend =>
   authBase({
     ...options,
     check: async login => {

@@ -2,53 +2,25 @@ import bodyParser from "body-parser";
 import Boom from "boom";
 import { Application, ErrorRequestHandler } from "express";
 import asyncHandler from "express-async-handler";
-import got from "got";
-import pick from "lodash/pick";
-import querystring from "querystring";
-import { Omit } from "type-fest";
+import { Backend } from "./backend/interface";
 
-export interface IGetOptionsArg {
+export interface IBeforeData {
   path?: string;
   projectId: string;
   ref?: string;
+  serverOptions: IServerOptions;
 }
 
-interface IServerOptions {
+interface IServerOptions extends IServerOptionsAuth {
+  backend: Backend;
   prefix?: string;
-  getOptions: (data: IGetOptionsArg) => Promise<IOptions | undefined | null>;
+  before: (data: IBeforeData) => Promise<void>;
 }
 
-export interface IOptionsAuth {
+export interface IServerOptionsAuth {
   authCheck: (authorizationHeader: string) => Promise<boolean>;
   authLogin: (body: any) => Promise<string | undefined>;
 }
-
-export interface IOptions extends IOptionsAuth {
-  gitlab: IOptionsGitlab;
-}
-
-export interface IOptionsGitlab {
-  host?: string;
-  timeout?: number;
-  version?: string;
-  privateToken: string;
-}
-
-const defaultGitlabOptions: Omit<IOptionsGitlab, "privateToken"> = {
-  host: "https://gitlab.com",
-  timeout: 30000,
-  version: "v4",
-};
-
-const basePickHeaders = [
-  "ratelimit-limit",
-  "ratelimit-observed",
-  "ratelimit-remaining",
-  "ratelimit-reset",
-  "ratelimit-resettime",
-  "x-request-id",
-  "x-runtime",
-];
 
 export interface ICommitAction {
   action: "create" | "delete" | "move" | "update";
@@ -57,7 +29,7 @@ export interface ICommitAction {
   encoding?: string;
 }
 
-interface ICommitBody {
+export interface ICommitBody {
   actions: ICommitAction[];
   branch: string;
   commit_message: string;
@@ -104,15 +76,12 @@ export async function applyMiddlewares(
 const authenticate = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
     const { projectId } = req.params;
-    const options = await serverOptions.getOptions({
+    await serverOptions.before({
       projectId,
+      serverOptions,
     });
 
-    if (!options) {
-      throw Boom.unauthorized();
-    }
-
-    const token = await options.authLogin(req.body);
+    const token = await serverOptions.authLogin(req.body);
 
     if (!token) {
       throw Boom.unauthorized();
@@ -125,51 +94,30 @@ const tree = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
     const { path, page, ref } = req.query;
     const { projectId } = req.params;
-    const options = await serverOptions.getOptions({
+    const authorization = req.get("Authorization");
+
+    await serverOptions.before({
       path,
       projectId,
       ref,
+      serverOptions,
     });
-    const authorization = req.get("Authorization");
 
     if (
-      !options ||
       !authorization ||
-      !(await options.authCheck(authorization))
+      !(await serverOptions.authCheck(authorization))
     ) {
       throw Boom.unauthorized();
     }
 
-    const { body, headers } = await got(
-      `/projects/${encodeURIComponent(projectId)}/repository/tree?` +
-        querystring.stringify({
-          page,
-          path,
-          ref,
-        }),
-      {
-        baseUrl: getBaseUrl(options),
-        headers: {
-          "Private-Token": options.gitlab.privateToken,
-        },
-        json: true,
-        timeout: options.gitlab.timeout,
-      },
-    );
+    const { body, headers } = await serverOptions.backend.tree({
+      page,
+      path,
+      projectId,
+      ref,
+    });
 
-    res.set(
-      pick(headers, [
-        ...basePickHeaders,
-        "x-next-page",
-        "x-page",
-        "x-per-page",
-        "x-prev-page",
-        "x-request-id",
-        "x-runtime",
-        "x-total",
-        "x-total-pages",
-      ]),
-    );
+    res.set(headers);
     res.send(body);
   });
 
@@ -178,52 +126,29 @@ const readFile = (serverOptions: IServerOptions) =>
     const file = req.params["0"];
     const { ref } = req.query;
     const { projectId } = req.params;
-    const options = await serverOptions.getOptions({
+    const authorization = req.get("Authorization");
+
+    await serverOptions.before({
       path: file,
       projectId,
       ref,
+      serverOptions,
     });
-    const authorization = req.get("Authorization");
 
     if (
-      !options ||
       !authorization ||
-      !(await options.authCheck(authorization))
+      !(await serverOptions.authCheck(authorization))
     ) {
       throw Boom.unauthorized();
     }
 
-    const { body, headers } = await got(
-      `/projects/${encodeURIComponent(
-        projectId,
-      )}/repository/files/${encodeURIComponent(file)}?` +
-        querystring.stringify({
-          ref,
-        }),
-      {
-        baseUrl: getBaseUrl(options),
-        headers: {
-          "Private-Token": options.gitlab.privateToken,
-        },
-        json: true,
-        timeout: options.gitlab.timeout,
-      },
-    );
+    const { body, headers } = await serverOptions.backend.readFile({
+      file,
+      projectId,
+      ref,
+    });
 
-    res.set(
-      pick(headers, [
-        ...basePickHeaders,
-        "x-gitlab-blob-id",
-        "x-gitlab-commit-id",
-        "x-gitlab-content-sha256",
-        "x-gitlab-encoding",
-        "x-gitlab-file-name",
-        "x-gitlab-file-path",
-        "x-gitlab-last-commit-id",
-        "x-gitlab-ref",
-        "x-gitlab-size",
-      ]),
-    );
+    res.set(headers);
     res.send(body);
   });
 
@@ -231,6 +156,7 @@ const commit = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
     const commitBody: ICommitBody = req.body;
     const { projectId } = req.params;
+    const authorization = req.get("Authorization");
 
     if (
       !commitBody ||
@@ -241,46 +167,25 @@ const commit = (serverOptions: IServerOptions) =>
       throw Boom.badRequest();
     }
 
-    const options = await serverOptions.getOptions({
+    await serverOptions.before({
       path: commitBody.actions[0].file_path,
       projectId,
       ref: commitBody.branch,
+      serverOptions,
     });
-    const authorization = req.get("Authorization");
 
     if (
-      !options ||
       !authorization ||
-      !(await options.authCheck(authorization))
+      !(await serverOptions.authCheck(authorization))
     ) {
       throw Boom.unauthorized();
     }
 
-    const { body, headers } = await got(
-      `/projects/${encodeURIComponent(projectId)}/repository/commits`,
-      {
-        baseUrl: getBaseUrl(options),
-        body: commitBody,
-        headers: {
-          "Private-Token": options.gitlab.privateToken,
-        },
-        json: true,
-        method: "POST",
-        timeout: options.gitlab.timeout,
-      },
-    );
+    const { body, headers } = await serverOptions.backend.commit({
+      commitBody,
+      projectId,
+    });
 
-    res.set(pick(headers, [...basePickHeaders]));
+    res.set(headers);
     res.send(body);
   });
-
-// Utils
-
-const getBaseUrl = ({ gitlab }: IOptions) => {
-  const { host, version } = gitlab || defaultGitlabOptions;
-  return [
-    host || defaultGitlabOptions.host,
-    "api",
-    version || defaultGitlabOptions.version,
-  ].join("/");
-};

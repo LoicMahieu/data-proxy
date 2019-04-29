@@ -1,6 +1,6 @@
 import Boom from "boom";
 import jwt, { SignOptions } from "jsonwebtoken";
-import { IOptionsAuth } from "../server";
+import { IServerOptionsAuth } from "../server";
 
 export interface IAuthBaseOptions {
   jwtSecret: string;
@@ -14,7 +14,7 @@ interface IAuthTokenData {
   login: string;
 }
 
-export const authBase = (options: IAuthBaseOptions): IOptionsAuth => ({
+export const authBase = (options: IAuthBaseOptions): IServerOptionsAuth => ({
   authCheck: createAuthCheck(options),
   authLogin: createAuthLogin(options),
 });

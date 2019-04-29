@@ -1,30 +1,26 @@
 import Boom from "boom";
 import micromatch from "micromatch";
-import { IGetOptionsArg, IOptions, IOptionsAuth, IOptionsGitlab } from "./server";
+import { IBeforeData } from "./server";
 
-interface IOptionsGetterArg extends IOptionsAuth {
-  gitlab: IOptionsGitlab;
+interface IBeforeCheckPermissionsOptions {
   projectId: string;
   allowedRefs?: string[];
   forbiddenRefs?: string[];
   pathMatch?: string;
 }
 
-export const optionsGetter = ({
-  gitlab,
+export const beforeCheckPermissions = ({
   projectId: allowedProjectId,
   allowedRefs,
   forbiddenRefs,
   pathMatch,
-  authCheck,
-  authLogin,
-}: IOptionsGetterArg) => async ({
+}: IBeforeCheckPermissionsOptions) => async ({
   projectId,
   ref,
   path,
-}: IGetOptionsArg): Promise<IOptions | undefined> => {
+}: IBeforeData) => {
   if (allowedProjectId !== projectId) {
-    return;
+    throw Boom.notFound();
   }
 
   if (
@@ -38,10 +34,4 @@ export const optionsGetter = ({
   if (path && pathMatch && !micromatch.isMatch(path, pathMatch)) {
     throw Boom.unauthorized("This path is not allowed.");
   }
-
-  return {
-    authCheck,
-    authLogin,
-    gitlab,
-  };
 };

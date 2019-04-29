@@ -45,9 +45,7 @@ export async function applyMiddlewares(
 
 const authenticate = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
-    await serverOptions.before({
-      serverOptions,
-    });
+    await serverOptions.before({});
 
     const token = await serverOptions.auth.authLogin(req.body);
 
@@ -67,7 +65,6 @@ const tree = (serverOptions: IServerOptions) =>
     await serverOptions.before({
       path,
       ref,
-      serverOptions,
     });
 
     if (
@@ -98,7 +95,6 @@ const readFile = (serverOptions: IServerOptions) =>
     await serverOptions.before({
       path: file,
       ref,
-      serverOptions,
     });
 
     if (
@@ -136,7 +132,6 @@ const commit = (serverOptions: IServerOptions) =>
     await serverOptions.before({
       path: commitBody.actions[0].file_path,
       ref: commitBody.branch,
-      serverOptions,
     });
 
     if (

@@ -3,7 +3,7 @@ import { Omit } from "type-fest";
 import { authBase, IAuthBackend, IAuthBaseOptions } from "./base";
 
 interface IAuthBaseMapOptions extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {
-  getAuthMap: () => Promise<IAuthMap>;
+  authMap: IAuthMap | (() => Promise<IAuthMap>);
 }
 
 interface IAuthMap {
@@ -14,11 +14,11 @@ export const authBaseMap = (options: IAuthBaseMapOptions): IAuthBackend =>
   authBase({
     ...options,
     check: async login => {
-      const authMap = await options.getAuthMap();
+      const authMap = typeof options.authMap === 'function' ? await options.authMap() : options.authMap;
       return !!authMap[login];
     },
     verifyPassword: async (login, password) => {
-      const authMap = await options.getAuthMap();
+      const authMap = typeof options.authMap === 'function' ? await options.authMap() : options.authMap;
       const encodedPassword = authMap[login];
       if (!encodedPassword) {
         return false;

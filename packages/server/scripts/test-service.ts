@@ -11,9 +11,9 @@ app.use(cors());
 
 applyMiddlewares(app, {
   auth: authBaseMap({
-    getAuthMap: async () => ({
+    authMap: {
       loic: "$2b$10$4Dj1OSSTi4WwIRjbVtbYlupzpNPTjsmqkwMRrIO1oBKGpRv3Zxx0S",
-    }),
+    },
     jwtSecret: "foobar",
   }),
   backend: new BackendGitlab({

@@ -9,7 +9,7 @@ export async function applyMiddlewares(
   serverOptions: IServerOptions,
 ) {
   const prefix = serverOptions.prefix || "";
-  const projectId = serverOptions.projectId;
+  const projectId = encodeURIComponent(serverOptions.projectId);
 
   app.post(
     `${prefix}/__git-data-proxy__/${projectId}/authenticate`,

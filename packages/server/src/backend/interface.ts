@@ -19,14 +19,24 @@ export interface IBackendReadFileOptions extends IBackendBaseOptions {
 export interface IBackendCommitOptions extends IBackendBaseOptions {
   commitBody: ICommitBody;
 }
+export interface IBackendTreeFile {
+  id: string;
+  path: string;
+}
+export interface IBackendFile {
+  blob_id: string;
+  content: string;
+  encoding: "base64";
+  file_path: string;
+}
 
 export interface IBackend {
   tree(
     options: IBackendTreeOptions,
-  ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
+  ): Promise<{ headers: OutgoingHttpHeaders; body: IBackendTreeFile[] }>;
   readFile(
     options: IBackendReadFileOptions,
-  ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
+  ): Promise<{ headers: OutgoingHttpHeaders; body: IBackendFile }>;
   commit(
     options: IBackendCommitOptions,
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;

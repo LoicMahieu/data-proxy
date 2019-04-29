@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { Omit } from "type-fest";
 import { authBase, IAuthBackend, IAuthBaseOptions } from "./base";
 
-interface IAuthBaseMapOptions extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {
+export interface IAuthBaseMapOptions extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {
   authMap: IAuthMap | (() => Promise<IAuthMap>);
 }
 

@@ -7,6 +7,7 @@ import {
   IBackend,
   IBackendCommitOptions,
   IBackendReadFileOptions,
+  IBackendTreeFile,
   IBackendTreeOptions,
 } from "./interface";
 
@@ -83,7 +84,7 @@ export const backendFilesystem = (
     );
 
     return {
-      body: treeFiles,
+      body: treeFiles as IBackendTreeFile[],
       headers: {},
     };
   },

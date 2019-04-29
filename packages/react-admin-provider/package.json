@@ -1,0 +1,26 @@
+{
+  "name": "@git-data-proxy/react-admin-provider",
+  "version": "0.0.1",
+  "private": true,
+  "files": [
+    "lib/*"
+  ],
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "author": "Loïc Mahieu <mahieuloic@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "npm run build",
+    "build": "rm -rf lib/* && tsc",
+    "watch": "yarn build && tsc -w",
+    "prepare": "yarn build"
+  },
+  "dependencies": {
+    "@react-admin-git-provider/gitlab": "^0.0.2"
+  },
+  "devDependencies": {
+    "tslint": "^5.16.0",
+    "type-fest": "^0.4.1",
+    "typescript": "^3.4.5"
+  }
+}

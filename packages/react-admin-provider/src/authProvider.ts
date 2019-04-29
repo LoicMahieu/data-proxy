@@ -1,0 +1,60 @@
+const KEY = "react-admin.gitlab-provider.token";
+
+export function getToken() {
+  return window.sessionStorage.getItem(KEY) || undefined;
+}
+export function setToken(value: string) {
+  return window.sessionStorage.setItem(KEY, value);
+}
+export function removeToken() {
+  return window.sessionStorage.removeItem(KEY);
+}
+
+export interface IAuthOptions {
+  host: string;
+  projectId: string;
+}
+
+export const createAuthProvider = ({ host, projectId }: IAuthOptions) => async (
+  type: string,
+  params: { login: string; password: string },
+) => {
+  try {
+    console.log({ type })
+    if (type === "AUTH_LOGIN") {
+      const { login, password } = params;
+      const res = await fetch(
+        `${host}/__git-data-proxy__/${encodeURIComponent(
+          projectId,
+        )}/authenticate`,
+        {
+          body: JSON.stringify({ login, password }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "post",
+        },
+      );
+      if (res.status < 200 || res.status >= 300) {
+        throw new Error(res.statusText);
+      }
+      const { token } = await res.json();
+      setToken(token);
+      return Promise.resolve();
+    }
+    if (type === "AUTH_LOGOUT") {
+      removeToken();
+      return Promise.resolve();
+    }
+    if (type === "AUTH_ERROR") {
+      return Promise.resolve();
+    }
+    if (type === "AUTH_CHECK") {
+      return getToken() ? Promise.resolve() : Promise.reject();
+    }
+    return Promise.reject("Unknown method");
+  } catch (err) {
+    console.error(err);
+    return Promise.reject(err.message)
+  }
+};

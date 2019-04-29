@@ -9,23 +9,24 @@ export async function applyMiddlewares(
   serverOptions: IServerOptions,
 ) {
   const prefix = serverOptions.prefix || "";
+  const projectId = serverOptions.projectId;
 
   app.post(
-    `${prefix}/__git-data-proxy__/:projectId/authenticate`,
+    `${prefix}/__git-data-proxy__/${projectId}/authenticate`,
     bodyParser.json(),
     authenticate(serverOptions),
   );
 
   app.get(
-    `${prefix}/api/v4/projects/:projectId/repository/tree`,
+    `${prefix}/api/v4/projects/${projectId}/repository/tree`,
     tree(serverOptions),
   );
   app.get(
-    `${prefix}/api/v4/projects/:projectId/repository/files/*`,
+    `${prefix}/api/v4/projects/${projectId}/repository/files/*`,
     readFile(serverOptions),
   );
   app.post(
-    `${prefix}/api/v4/projects/:projectId/repository/commits`,
+    `${prefix}/api/v4/projects/${projectId}/repository/commits`,
     bodyParser.json(),
     commit(serverOptions),
   );
@@ -44,9 +45,7 @@ export async function applyMiddlewares(
 
 const authenticate = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
-    const { projectId } = req.params;
     await serverOptions.before({
-      projectId,
       serverOptions,
     });
 
@@ -62,12 +61,11 @@ const authenticate = (serverOptions: IServerOptions) =>
 const tree = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
     const { path, page, ref } = req.query;
-    const { projectId } = req.params;
+    const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
 
     await serverOptions.before({
       path,
-      projectId,
       ref,
       serverOptions,
     });
@@ -94,12 +92,11 @@ const readFile = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
     const file = req.params["0"];
     const { ref } = req.query;
-    const { projectId } = req.params;
+    const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
 
     await serverOptions.before({
       path: file,
-      projectId,
       ref,
       serverOptions,
     });
@@ -124,7 +121,7 @@ const readFile = (serverOptions: IServerOptions) =>
 const commit = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
     const commitBody: ICommitBody = req.body;
-    const { projectId } = req.params;
+    const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
 
     if (
@@ -138,7 +135,6 @@ const commit = (serverOptions: IServerOptions) =>
 
     await serverOptions.before({
       path: commitBody.actions[0].file_path,
-      projectId,
       ref: commitBody.branch,
       serverOptions,
     });

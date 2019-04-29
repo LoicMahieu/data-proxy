@@ -3,12 +3,12 @@ import { Backend } from "./backend/interface";
 
 export interface IBeforeData {
   path?: string;
-  projectId: string;
   ref?: string;
   serverOptions: IServerOptions;
 }
 
 export interface IServerOptions {
+  projectId: string;
   auth: IAuthBackend;
   backend: Backend;
   before: (data: IBeforeData) => Promise<void>;

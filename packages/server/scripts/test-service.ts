@@ -21,8 +21,8 @@ applyMiddlewares(app, {
   }),
   before: beforeCheckPermissions({
     pathMatch: "data/**/*",
-    projectId: "LoicMahieu/test-react-admin",
   }),
+  projectId: "LoicMahieu/test-react-admin",
 });
 
 app.listen(3001);

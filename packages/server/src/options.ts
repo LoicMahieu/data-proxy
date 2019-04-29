@@ -1,6 +1,6 @@
 import Boom from "boom";
 import micromatch from "micromatch";
-import { IGetOptionsArg, IOptions, IOptionsAuth, IOptionsGitlab } from ".";
+import { IGetOptionsArg, IOptions, IOptionsAuth, IOptionsGitlab } from "./server";
 
 interface IOptionsGetterArg extends IOptionsAuth {
   gitlab: IOptionsGitlab;

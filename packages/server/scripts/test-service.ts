@@ -1,9 +1,7 @@
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
-import { applyMiddlewares } from "../src";
-import { authBaseMap } from "../src/auth/authBaseMap";
-import { optionsGetter } from "../src/options";
+import { applyMiddlewares, authBaseMap, optionsGetter } from "../src";
 
 const app = express();
 
@@ -13,7 +11,7 @@ app.use(cors());
 applyMiddlewares(app, {
   getOptions: optionsGetter({
     gitlab: {
-      privateToken: process.env.GITLAB_PRIVATE_TOKEN,
+      privateToken: process.env.GITLAB_PRIVATE_TOKEN || "",
     },
     pathMatch: "data/**/*",
     projectId: "LoicMahieu/test-react-admin",

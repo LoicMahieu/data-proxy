@@ -1,6 +1,6 @@
 import Boom from "boom";
 import jwt, { SignOptions } from "jsonwebtoken";
-import { IOptionsAuth } from "../..";
+import { IOptionsAuth } from "../server";
 
 export interface IAuthBaseOptions {
   jwtSecret: string;

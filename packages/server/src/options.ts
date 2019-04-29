@@ -1,8 +1,8 @@
 import Boom from "boom";
 import micromatch from "micromatch";
-import { IGetOptionsArg, IOptions, IOptionsGitlab } from ".";
+import { IGetOptionsArg, IOptions, IOptionsAuth, IOptionsGitlab } from ".";
 
-interface IOptionsGetterArg {
+interface IOptionsGetterArg extends IOptionsAuth {
   gitlab: IOptionsGitlab;
   projectId: string;
   allowedRefs?: string[];
@@ -16,6 +16,8 @@ export const optionsGetter = ({
   allowedRefs,
   forbiddenRefs,
   pathMatch,
+  authCheck,
+  authLogin,
 }: IOptionsGetterArg) => async ({
   projectId,
   ref,
@@ -38,8 +40,8 @@ export const optionsGetter = ({
   }
 
   return {
-    authCheck: async token => !!token,
-    authLogin: async body => "foo",
+    authCheck,
+    authLogin,
     gitlab,
   };
 };

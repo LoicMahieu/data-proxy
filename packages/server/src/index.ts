@@ -18,10 +18,13 @@ interface IServerOptions {
   getOptions: (data: IGetOptionsArg) => Promise<IOptions | undefined | null>;
 }
 
-export interface IOptions {
-  gitlab: IOptionsGitlab;
+export interface IOptionsAuth {
   authCheck: (authorizationHeader: string) => Promise<boolean>;
-  authLogin: (body: any) => Promise<string>;
+  authLogin: (body: any) => Promise<string | undefined>;
+}
+
+export interface IOptions extends IOptionsAuth {
+  gitlab: IOptionsGitlab;
 }
 
 export interface IOptionsGitlab {
@@ -68,6 +71,7 @@ export async function applyMiddlewares(
 
   app.post(
     `${prefix}/__git-data-proxy__/:projectId/authenticate`,
+    bodyParser.json(),
     authenticate(serverOptions),
   );
 
@@ -108,7 +112,12 @@ const authenticate = (serverOptions: IServerOptions) =>
       throw Boom.unauthorized();
     }
 
-    const token = options.authLogin(req.body);
+    const token = await options.authLogin(req.body);
+
+    if (!token) {
+      throw Boom.unauthorized();
+    }
+
     res.send({ token });
   });
 

@@ -20,14 +20,14 @@ export interface IBackendCommitOptions extends IBackendBaseOptions {
   commitBody: ICommitBody;
 }
 
-export declare class Backend {
-  public tree(
+export interface IBackend {
+  tree(
     options: IBackendTreeOptions,
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
-  public readFile(
+  readFile(
     options: IBackendReadFileOptions,
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
-  public commit(
+  commit(
     options: IBackendCommitOptions,
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
 }

@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import { applyMiddlewares, authBaseMap, beforeCheckPermissions } from "../src";
-import { BackendGitlab } from "../src/backend/gitlab";
+import { backendGitlab } from "../src/backend/gitlab";
 
 const app = express();
 
@@ -16,7 +16,7 @@ applyMiddlewares(app, {
     },
     jwtSecret: "foobar",
   }),
-  backend: new BackendGitlab({
+  backend: backendGitlab({
     privateToken: process.env.GITLAB_PRIVATE_TOKEN || "",
   }),
   before: beforeCheckPermissions({

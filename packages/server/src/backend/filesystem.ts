@@ -4,7 +4,7 @@ import hasha from "hasha";
 import path from "path";
 import { ICommitAction } from "../types";
 import {
-  Backend,
+  IBackend,
   IBackendCommitOptions,
   IBackendReadFileOptions,
   IBackendTreeOptions,
@@ -62,20 +62,11 @@ export interface IBackendFilesystemOptions {
   cwd: string;
 }
 
-export class BackendFilesystem implements Backend {
-  private readonly options: IBackendFilesystemOptions;
-
-  constructor(options: IBackendFilesystemOptions) {
-    this.options = options;
-  }
-
-  public async tree({
-    projectId,
-    page,
-    path: basePath,
-    ref,
-  }: IBackendTreeOptions) {
-    const absBasePath = path.join(this.options.cwd, basePath);
+export const backendFilesystem = (
+  options: IBackendFilesystemOptions,
+): IBackend => ({
+  async tree({ projectId, page, path: basePath, ref }: IBackendTreeOptions) {
+    const absBasePath = path.join(options.cwd, basePath);
     if (
       !(await fs.pathExists(absBasePath)) &&
       !(await fs.stat(absBasePath)).isDirectory
@@ -88,18 +79,17 @@ export class BackendFilesystem implements Backend {
 
     const files = await fs.readdir(absBasePath);
     const treeFiles = await Promise.all(
-      files.map(fileName =>
-        fileToTree(path.join(basePath, fileName), this.options),
-      ),
+      files.map(fileName => fileToTree(path.join(basePath, fileName), options)),
     );
 
     return {
       body: treeFiles,
       headers: {},
     };
-  }
-  public async readFile({ projectId, ref, file }: IBackendReadFileOptions) {
-    const absFilePath = path.join(this.options.cwd, file);
+  },
+
+  async readFile({ projectId, ref, file }: IBackendReadFileOptions) {
+    const absFilePath = path.join(options.cwd, file);
     if (!(await fs.pathExists(absFilePath))) {
       throw Boom.notFound();
     }
@@ -128,10 +118,11 @@ export class BackendFilesystem implements Backend {
       },
       headers: {},
     };
-  }
-  public async commit({ projectId, commitBody }: IBackendCommitOptions) {
+  },
+
+  async commit({ projectId, commitBody }: IBackendCommitOptions) {
     await Promise.all(
-      commitBody.actions.map(action => doCommitAction(action, this.options)),
+      commitBody.actions.map(action => doCommitAction(action, options)),
     );
     return {
       body: {
@@ -139,5 +130,5 @@ export class BackendFilesystem implements Backend {
       },
       headers: {},
     };
-  }
-}
+  },
+});

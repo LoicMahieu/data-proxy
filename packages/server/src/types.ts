@@ -1,5 +1,5 @@
 import { IAuthBackend } from "./auth/base";
-import { Backend } from "./backend/interface";
+import { IBackend } from "./backend/interface";
 
 export interface IBeforeData {
   path?: string;
@@ -10,7 +10,7 @@ export interface IBeforeData {
 export interface IServerOptions {
   projectId: string;
   auth: IAuthBackend;
-  backend: Backend;
+  backend: IBackend;
   before: (data: IBeforeData) => Promise<void>;
   prefix?: string;
 }

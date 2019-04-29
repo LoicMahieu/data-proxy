@@ -3,7 +3,7 @@ import pick from "lodash/pick";
 import querystring from "querystring";
 import { Omit } from "type-fest";
 import {
-  Backend,
+  IBackend,
   IBackendCommitOptions,
   IBackendReadFileOptions,
   IBackendTreeOptions,
@@ -32,19 +32,8 @@ export interface IBackendGitlabOptions {
   privateToken: string;
 }
 
-export class BackendGitlab implements Backend {
-  private readonly options: IBackendGitlabOptions;
-
-  constructor (options: IBackendGitlabOptions) {
-    this.options = options
-  }
-
-  public async tree({
-    projectId,
-    page,
-    path,
-    ref,
-  }: IBackendTreeOptions) {
+export const backendGitlab = (options: IBackendGitlabOptions): IBackend => ({
+  async tree({ projectId, page, path, ref }: IBackendTreeOptions) {
     const { body, headers } = await got(
       `/projects/${encodeURIComponent(projectId)}/repository/tree?` +
         querystring.stringify({
@@ -53,12 +42,12 @@ export class BackendGitlab implements Backend {
           ref,
         }),
       {
-        baseUrl: getBaseUrl(this.options),
+        baseUrl: getBaseUrl(options),
         headers: {
-          "Private-Token": this.options.privateToken,
+          "Private-Token": options.privateToken,
         },
         json: true,
-        timeout: this.options.timeout,
+        timeout: options.timeout,
       },
     );
 
@@ -76,12 +65,8 @@ export class BackendGitlab implements Backend {
         "x-total-pages",
       ]),
     };
-  }
-  public async readFile({
-    projectId,
-    ref,
-    file,
-  }: IBackendReadFileOptions) {
+  },
+  async readFile({ projectId, ref, file }: IBackendReadFileOptions) {
     const { body, headers } = await got(
       `/projects/${encodeURIComponent(
         projectId,
@@ -90,12 +75,12 @@ export class BackendGitlab implements Backend {
           ref,
         }),
       {
-        baseUrl: getBaseUrl(this.options),
+        baseUrl: getBaseUrl(options),
         headers: {
-          "Private-Token": this.options.privateToken,
+          "Private-Token": options.privateToken,
         },
         json: true,
-        timeout: this.options.timeout,
+        timeout: options.timeout,
       },
     );
 
@@ -114,22 +99,19 @@ export class BackendGitlab implements Backend {
         "x-gitlab-size",
       ]),
     };
-  }
-  public async commit({
-    projectId,
-    commitBody,
-  }: IBackendCommitOptions) {
+  },
+  async commit({ projectId, commitBody }: IBackendCommitOptions) {
     const { body, headers } = await got(
       `/projects/${encodeURIComponent(projectId)}/repository/commits`,
       {
-        baseUrl: getBaseUrl(this.options),
+        baseUrl: getBaseUrl(options),
         body: commitBody,
         headers: {
-          "Private-Token": this.options.privateToken,
+          "Private-Token": options.privateToken,
         },
         json: true,
         method: "POST",
-        timeout: this.options.timeout,
+        timeout: options.timeout,
       },
     );
 
@@ -137,8 +119,8 @@ export class BackendGitlab implements Backend {
       body,
       headers: pick(headers, [...basePickHeaders]),
     };
-  }
-}
+  },
+});
 
 // Utils
 

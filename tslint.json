@@ -6,7 +6,9 @@
   ],
   "jsRules": {},
   "rules": {
-    "no-console": false
+    "no-console": false,
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": [true, "dev"]
   },
   "rulesDirectory": []
 }

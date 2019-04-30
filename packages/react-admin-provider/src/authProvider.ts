@@ -20,7 +20,6 @@ export const createAuthProvider = ({ host, projectId }: IAuthOptions) => async (
   params: { login: string; password: string },
 ) => {
   try {
-    console.log({ type })
     if (type === "AUTH_LOGIN") {
       const { login, password } = params;
       const res = await fetch(

@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { Omit } from "type-fest";
 import { authBase, IAuthBackend, IAuthBaseOptions } from "./base";
 

@@ -39,13 +39,7 @@ const backend = backendFilesystem({
 
 const auth = authOmnipartners({
   jwtSecret: "foobar",
-  omnipartners: omnipartners({
-    cis: {
-      host: "https://XX.clixray.io",
-      key: "XX",
-      secret: "XX",
-    }
-  }),
+  omnipartners: omnipartners(JSON.parse(process.env.OMNIPARTNERS_CONFIG || "")),
   verifyUser: verifyUserFromFileList({
     backend,
     path: "data/users",

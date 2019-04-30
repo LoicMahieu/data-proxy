@@ -1,5 +1,5 @@
 {
-  "name": "@git-data-proxy/server-auth-omnipartners",
+  "name": "@data-proxy/server-auth-omnipartners",
   "version": "0.0.6",
   "private": true,
   "files": [
@@ -9,6 +9,9 @@
   "typings": "./lib/index.d.ts",
   "author": "Loïc Mahieu <mahieuloic@gmail.com>",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "npm run build",
     "build": "rm -rf lib/* && tsc",
@@ -16,7 +19,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@git-data-proxy/server": "^0.0.1"
+    "@data-proxy/server": "^0.0.1"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.3.3",

@@ -1,5 +1,5 @@
 {
-  "name": "@git-data-proxy/root",
+  "name": "@data-proxy/root",
   "private": true,
   "version": "0.0.0",
   "author": "Loïc Mahieu <mahieuloic@gmail.com>",

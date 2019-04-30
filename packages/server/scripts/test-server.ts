@@ -10,7 +10,7 @@ import {
   beforeCheckPermissions,
 } from "../src";
 
-import { authOmnipartners, verifyUserFromFileList } from "@git-data-proxy/server-auth-omnipartners";
+import { authOmnipartners, verifyUserFromFileList } from "@data-proxy/server-auth-omnipartners";
 import omnipartners from "omnipartners";
 
 const app = express();

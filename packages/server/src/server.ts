@@ -12,7 +12,7 @@ export async function applyMiddlewares(
   const projectId = encodeURIComponent(serverOptions.projectId);
 
   app.post(
-    `${prefix}/__git-data-proxy__/${projectId}/authenticate`,
+    `${prefix}/__data-proxy__/${projectId}/authenticate`,
     bodyParser.json(),
     authenticate(serverOptions),
   );

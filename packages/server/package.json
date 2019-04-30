@@ -1,5 +1,5 @@
 {
-  "name": "@git-data-proxy/server",
+  "name": "@data-proxy/server",
   "version": "0.0.1",
   "private": true,
   "files": [
@@ -9,6 +9,9 @@
   "typings": "./lib/index.d.ts",
   "author": "Loïc Mahieu <mahieuloic@gmail.com>",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "start": "nodemon -r ts-node/register scripts/test-server.ts",
     "test": "npm run build",

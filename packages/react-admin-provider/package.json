@@ -1,5 +1,5 @@
 {
-  "name": "@git-data-proxy/react-admin-provider",
+  "name": "@data-proxy/react-admin-provider",
   "version": "0.0.1",
   "private": true,
   "files": [
@@ -9,6 +9,9 @@
   "typings": "./lib/index.d.ts",
   "author": "Loïc Mahieu <mahieuloic@gmail.com>",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "npm run build",
     "build": "rm -rf lib/* && tsc",

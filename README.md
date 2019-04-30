@@ -1,1 +1,1 @@
-# git-data-proxy
+# data-proxy

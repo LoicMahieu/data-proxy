@@ -23,7 +23,7 @@ export const createAuthProvider = ({ host, projectId }: IAuthOptions) => async (
     if (type === "AUTH_LOGIN") {
       const { login, password } = params;
       const res = await fetch(
-        `${host}/__git-data-proxy__/${encodeURIComponent(
+        `${host}/__data-proxy__/${encodeURIComponent(
           projectId,
         )}/authenticate`,
         {

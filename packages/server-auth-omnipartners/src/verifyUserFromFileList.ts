@@ -1,4 +1,4 @@
-import { ILoadFileListOptions, loadFileList } from "@git-data-proxy/server";
+import { ILoadFileListOptions, loadFileList } from "@data-proxy/server";
 import { IUser } from "omnipartners";
 
 interface IVerifyUserFromListOptions extends ILoadFileListOptions {

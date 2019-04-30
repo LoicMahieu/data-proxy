@@ -2,7 +2,7 @@ import {
   authBase,
   IAuthBackend,
   IAuthBaseOptions,
-} from "@git-data-proxy/server";
+} from "@data-proxy/server";
 import { IUser, IUserDataOptions, Omnipartners } from "omnipartners";
 import { Omit } from "type-fest";
 

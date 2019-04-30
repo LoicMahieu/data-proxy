@@ -1,0 +1,31 @@
+{
+  "name": "@git-data-proxy/server-auth-omnipartners",
+  "version": "0.0.6",
+  "private": true,
+  "files": [
+    "lib/*"
+  ],
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "author": "Loïc Mahieu <mahieuloic@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon -r ts-node/register scripts/test-service.ts",
+    "test": "npm run build",
+    "build": "rm -rf lib/* && tsc",
+    "watch": "yarn build && tsc -w",
+    "prepare": "yarn build"
+  },
+  "dependencies": {
+    "@git-data-proxy/server": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.3.3",
+    "omnipartners": "^2.0.29",
+    "type-fest": "^0.4.1",
+    "winston": "^3.2.1"
+  },
+  "peerDependencies": {
+    "omnipartners": "^2.0.29"
+  }
+}

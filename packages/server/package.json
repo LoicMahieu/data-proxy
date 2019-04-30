@@ -1,6 +1,6 @@
 {
   "name": "@git-data-proxy/server",
-  "version": "0.0.6",
+  "version": "0.0.1",
   "private": true,
   "files": [
     "lib/*"

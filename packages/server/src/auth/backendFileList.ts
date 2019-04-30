@@ -1,47 +1,29 @@
 import { Omit } from "type-fest";
-import { IBackend } from "../backend/interface";
+import { ILoadFileListOptions, loadFileList } from "../utils/loadFileList";
 import { IAuthBackend } from "./base";
 import { authBaseMap, IAuthBaseMapOptions } from "./baseMap";
 
 interface IAuthBackendFileListOptions
-  extends Omit<IAuthBaseMapOptions, "authMap" | "disableCheck"> {
-  backend: IBackend;
-  projectId: string;
-  ref: string;
-  path: string;
-}
+  extends Omit<IAuthBaseMapOptions, "authMap" | "disableCheck">,
+  ILoadFileListOptions {}
 
 export const authBackendFileList = ({
   backend,
+  path,
   projectId,
   ref,
-  path,
   ...options
 }: IAuthBackendFileListOptions): IAuthBackend =>
   authBaseMap({
     ...options,
     authMap: async () => {
-      const { body: files } = await backend.tree({
-        page: "1",
+      const entities = await loadFileList({
+        backend,
         path,
         projectId,
         ref,
       });
-      const contents = await Promise.all(
-        files.map(async file => {
-          const { body: fileContent } = await backend.readFile({
-            file: file.path,
-            projectId,
-            ref,
-          });
-          return JSON.parse(
-            Buffer.from(fileContent.content, fileContent.encoding).toString(
-              "utf8",
-            ),
-          );
-        }),
-      );
-      const authMap = contents
+      const authMap = entities
         .filter(item => Boolean(item.login) && Boolean(item.password))
         .reduce((res, item) => {
           res[item.login] = item.password;

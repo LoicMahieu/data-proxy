@@ -10,7 +10,7 @@ export interface IServerOptions {
   projectId: string;
   auth: IAuthBackend;
   backend: IBackend;
-  before: (data: IBeforeData) => Promise<void>;
+  before?: (data: IBeforeData) => Promise<void>;
   prefix?: string;
 }
 

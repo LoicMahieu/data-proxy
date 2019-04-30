@@ -45,7 +45,9 @@ export async function applyMiddlewares(
 
 const authenticate = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
-    await serverOptions.before({});
+    if (serverOptions.before) {
+      await serverOptions.before({});
+    }
 
     const token = await serverOptions.auth.authLogin(req.body);
 
@@ -62,10 +64,12 @@ const tree = (serverOptions: IServerOptions) =>
     const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
 
-    await serverOptions.before({
-      path,
-      ref,
-    });
+    if (serverOptions.before) {
+      await serverOptions.before({
+        path,
+        ref,
+      });
+    }
 
     if (
       !authorization ||
@@ -92,10 +96,12 @@ const readFile = (serverOptions: IServerOptions) =>
     const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
 
-    await serverOptions.before({
-      path: file,
-      ref,
-    });
+    if (serverOptions.before) {
+      await serverOptions.before({
+        path: file,
+        ref,
+      });
+    }
 
     if (
       !authorization ||
@@ -129,10 +135,12 @@ const commit = (serverOptions: IServerOptions) =>
       throw Boom.badRequest();
     }
 
-    await serverOptions.before({
-      path: commitBody.actions[0].file_path,
-      ref: commitBody.branch,
-    });
+    if (serverOptions.before) {
+      await serverOptions.before({
+        path: commitBody.actions[0].file_path,
+        ref: commitBody.branch,
+      });
+    }
 
     if (
       !authorization ||

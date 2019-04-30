@@ -707,10 +707,10 @@
     p-limit "^2.2.0"
     uuid "^3.3.2"
 
-"@react-admin-git-provider/gitlab@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.0.2.tgz#9336b5daf7105e2d69f12cd0165b83db2d681f2b"
-  integrity sha512-AHjVdO2M4CETsJBnSAaquuZNpB+5nDndLbLASTkNeyaVf6P4l3I+Q6a0PZ6nzzImDIApmCEs3xpG6Nd+XWYW5A==
+"@react-admin-git-provider/gitlab@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.0.3.tgz#8f5f7617556f029d4c580bd61d4e28a62cb373cb"
+  integrity sha512-BRdbFNfOX1QRFXtGUnTRdPAHvvrDmDo/et9JNtQ9IXMDLprKzzwJoZxwYDiJcEbZZ9Zd8TjGwFSFsbZfift4zw==
   dependencies:
     "@react-admin-git-provider/common" "^0.0.2"
     ky "^0.10.0"

@@ -4,7 +4,6 @@ import { IBackend } from "./backend/interface";
 export interface IBeforeData {
   path?: string;
   ref?: string;
-  serverOptions: IServerOptions;
 }
 
 export interface IServerOptions {

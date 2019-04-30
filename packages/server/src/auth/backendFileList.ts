@@ -4,7 +4,7 @@ import { IAuthBackend } from "./base";
 import { authBaseMap, IAuthBaseMapOptions } from "./baseMap";
 
 interface IAuthBackendFileListOptions
-  extends Omit<IAuthBaseMapOptions, "authMap"> {
+  extends Omit<IAuthBaseMapOptions, "authMap" | "disableCheck"> {
   backend: IBackend;
   projectId: string;
   ref: string;
@@ -49,4 +49,5 @@ export const authBackendFileList = ({
         }, {});
       return authMap;
     },
+    disableCheck: true,
   });

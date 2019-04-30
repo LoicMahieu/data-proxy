@@ -1,4 +1,4 @@
-const KEY = "react-admin.gitlab-provider.token";
+const KEY = "react-admin.data-proxy.token";
 
 export function getToken() {
   return window.sessionStorage.getItem(KEY) || undefined;

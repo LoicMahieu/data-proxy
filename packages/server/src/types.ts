@@ -26,4 +26,6 @@ export interface ICommitBody {
   actions: ICommitAction[];
   branch: string;
   commit_message: string;
+  author_email?: string;
+  author_name?: string;
 }

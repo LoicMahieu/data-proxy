@@ -30,8 +30,8 @@ export const authOmnipartners = ({
         password,
       });
 
-      if (typeof verifyUser === "function") {
-        return verifyUser(data);
+      if (typeof verifyUser === "function" && !await verifyUser(data)) {
+        return false;
       }
 
       return {

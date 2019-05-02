@@ -18,8 +18,9 @@ export interface IAuthBackend {
   authLogin: (body: any) => Promise<string | undefined>;
 }
 
-interface IAuthTokenData {
+export interface IAuthTokenData {
   login: string;
+  [key: string]: any
 }
 
 export const authBase = (options: IAuthBaseOptions): IAuthBackend => ({

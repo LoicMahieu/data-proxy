@@ -142,16 +142,19 @@ const commit = (serverOptions: IServerOptions) =>
       });
     }
 
-    let beforeCommitResult: void | ICommitBody;
-    if (serverOptions.beforeCommit) {
-      beforeCommitResult = await serverOptions.beforeCommit(commitBody);
+    if (!authorization) {
+      throw Boom.unauthorized();
     }
 
-    if (
-      !authorization ||
-      !(await serverOptions.auth.authCheck(authorization))
-    ) {
+    const authData = await serverOptions.auth.authCheck(authorization);
+
+    if (!authorization || !authData) {
       throw Boom.unauthorized();
+    }
+
+    let beforeCommitResult: void | ICommitBody;
+    if (serverOptions.beforeCommit) {
+      beforeCommitResult = await serverOptions.beforeCommit(commitBody, authData);
     }
 
     const { body, headers } = await serverOptions.backend.commit({

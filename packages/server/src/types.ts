@@ -1,4 +1,4 @@
-import { IAuthBackend } from "./auth/base";
+import { IAuthBackend, IAuthTokenData } from "./auth/base";
 import { IBackend } from "./backend/interface";
 
 export interface IBeforeData {
@@ -11,7 +11,7 @@ export interface IServerOptions {
   auth: IAuthBackend;
   backend: IBackend;
   before?: (data: IBeforeData) => Promise<void>;
-  beforeCommit?: (data: ICommitBody) => Promise<void | ICommitBody>;
+  beforeCommit?: (data: ICommitBody, authData: IAuthTokenData) => Promise<void | ICommitBody>;
   prefix?: string;
 }
 

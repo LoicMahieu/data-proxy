@@ -27,7 +27,7 @@ export const authBaseMap = (options: IAuthBaseMapOptions): IAuthBackend =>
       if (!encodedPassword || !await bcrypt.compare(password, encodedPassword)) {
         return false;
       }
-      return true;
+      return {};
     },
   });
 

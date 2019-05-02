@@ -697,23 +697,24 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@react-admin-git-provider/common@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/common/-/common-0.0.2.tgz#b9dbc0c14bea1bc88007caee573bedfd84d708d1"
-  integrity sha512-toH/9kmu+9lO+iNzSNMLV+ov+QRvXP1OkNRxJ4DIAbNLR+ASvb5TLjCyPgPTrPwmUCiIMOfIkosrRP9nBzc5zw==
+"@react-admin-git-provider/common@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/common/-/common-0.0.3.tgz#d999763d69863253dbcb35dfcba7e5e69e58cbca"
+  integrity sha512-wwut6fd40gYhyvwzkW0hPQfd6X0wzTYk8S0cIyhWZsnsjyVHO74I2OvDs/nAnPsCbZ4dZ7Jf2350gS9leQBxog==
   dependencies:
     localforage "^1.7.3"
     lodash "^4.17.11"
     p-limit "^2.2.0"
     uuid "^3.3.2"
 
-"@react-admin-git-provider/gitlab@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.0.3.tgz#8f5f7617556f029d4c580bd61d4e28a62cb373cb"
-  integrity sha512-BRdbFNfOX1QRFXtGUnTRdPAHvvrDmDo/et9JNtQ9IXMDLprKzzwJoZxwYDiJcEbZZ9Zd8TjGwFSFsbZfift4zw==
+"@react-admin-git-provider/gitlab@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.0.4.tgz#e2e70420c167665a67ac3873842c64c16abe8407"
+  integrity sha512-VKa2nrW6z+wBt32CO1CRDjWEsEGIRAMObCf71ypwBhgOY6fRLV/2THuA3naWc4SiQusnq9R/8DUxschz6WtRQQ==
   dependencies:
-    "@react-admin-git-provider/common" "^0.0.2"
+    "@react-admin-git-provider/common" "^0.0.3"
     ky "^0.10.0"
+    lodash "^4.17.11"
     p-limit "^2.2.0"
 
 "@sindresorhus/is@^0.14.0":
@@ -4104,10 +4105,10 @@ node-pre-gyp@^0.12.0:
     semver "^5.3.0"
     tar "^4"
 
-nodemon@^1.18.11:
-  version "1.18.11"
-  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.18.11.tgz#d836ab663776e7995570b963da5bfc807e53f6b8"
-  integrity sha512-KdN3tm1zkarlqNo4+W9raU3ihM4H15MVMSE/f9rYDZmFgDHAfAJsomYrHhApAkuUemYjFyEeXlpCOQ2v5gtBEw==
+nodemon@^1.19.0:
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.19.0.tgz#358e005549a1e9e1148cb2b9b8b28957dc4e4527"
+  integrity sha512-NHKpb/Je0Urmwi3QPDHlYuFY9m1vaVfTsRZG5X73rY46xPj0JpNe8WhUGQdkDXQDOxrBNIU3JrcflE9Y44EcuA==
   dependencies:
     chokidar "^2.1.5"
     debug "^3.1.0"

@@ -34,6 +34,8 @@ export const authOmnipartners = ({
         return verifyUser(data);
       }
 
-      return true;
+      return {
+        user: data
+      };
     },
   });

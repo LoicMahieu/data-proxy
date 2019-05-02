@@ -24,10 +24,10 @@ export const authBaseMap = (options: IAuthBaseMapOptions): IAuthBackend =>
     verifyPassword: async (login, password) => {
       const authMap = typeof options.authMap === 'function' ? await options.authMap() : options.authMap;
       const encodedPassword = authMap[login];
-      if (!encodedPassword) {
+      if (!encodedPassword || !await bcrypt.compare(password, encodedPassword)) {
         return false;
       }
-      return bcrypt.compare(password, encodedPassword);
+      return true;
     },
   });
 

@@ -142,6 +142,11 @@ const commit = (serverOptions: IServerOptions) =>
       });
     }
 
+    let beforeCommitResult: void | ICommitBody;
+    if (serverOptions.beforeCommit) {
+      beforeCommitResult = await serverOptions.beforeCommit(commitBody);
+    }
+
     if (
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
@@ -150,7 +155,7 @@ const commit = (serverOptions: IServerOptions) =>
     }
 
     const { body, headers } = await serverOptions.backend.commit({
-      commitBody,
+      commitBody: beforeCommitResult ? beforeCommitResult : commitBody,
       projectId,
     });
 

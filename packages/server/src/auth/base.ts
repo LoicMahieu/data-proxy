@@ -1,16 +1,20 @@
 import Boom from "boom";
 import jwt, { SignOptions } from "jsonwebtoken";
+import { Omit } from "type-fest";
 
 export interface IAuthBaseOptions {
   jwtSecret: string;
   jwtSignOptions?: SignOptions;
 
   check: (login: string) => Promise<boolean>;
-  verifyPassword: (login: string, password: string) => Promise<boolean>;
+  verifyPassword: (
+    login: string,
+    password: string,
+  ) => Promise<false | Omit<IAuthTokenData, "login">>;
 }
 
 export interface IAuthBackend {
-  authCheck: (authorizationHeader: string) => Promise<boolean>;
+  authCheck: (authorizationHeader: string) => Promise<false | IAuthTokenData>;
   authLogin: (body: any) => Promise<string | undefined>;
 }
 
@@ -44,14 +48,19 @@ const createAuthCheck = (options: IAuthBaseOptions) => async (
       throw err;
     }
 
-    throw Boom.badRequest(err.message)
+    throw Boom.badRequest(err.message);
   }
 
-  if (typeof data === "undefined" || !data || !data.login) {
+  if (
+    typeof data === "undefined" ||
+    !data ||
+    !data.login ||
+    !(await options.check(data.login))
+  ) {
     return false;
   }
 
-  return options.check(data.login);
+  return data;
 };
 
 const createAuthLogin = (options: IAuthBaseOptions) => async (body: any) => {
@@ -64,13 +73,16 @@ const createAuthLogin = (options: IAuthBaseOptions) => async (body: any) => {
     return;
   }
 
-  if (!(await options.verifyPassword(login, password))) {
+  const data = await options.verifyPassword(login, password);
+
+  if (!data) {
     return;
   }
 
   return jwt.sign(
     {
       login,
+      ...data,
     },
     options.jwtSecret,
     options.jwtSignOptions,

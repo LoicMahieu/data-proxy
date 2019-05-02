@@ -11,6 +11,7 @@ export interface IServerOptions {
   auth: IAuthBackend;
   backend: IBackend;
   before?: (data: IBeforeData) => Promise<void>;
+  beforeCommit?: (data: ICommitBody) => Promise<void | ICommitBody>;
   prefix?: string;
 }
 

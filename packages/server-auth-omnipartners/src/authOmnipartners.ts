@@ -24,11 +24,21 @@ export const authOmnipartners = ({
     ...options,
     check: async login => true,
     verifyPassword: async (login, password) => {
-      const data = await omnipartners.identity.authenticate({
-        data_options: dataOptions,
-        identifier: login,
-        password,
-      });
+      let data: IUser | void
+
+      try {
+        data = await omnipartners.identity.authenticate({
+          data_options: dataOptions,
+          identifier: login,
+          password,
+        });
+      } catch (err) {
+        if (err.code !== "OP/OPStatusError/3" && err.code !== "OP/OPStatusError/4" && err.code !== "OP/OPStatusError/5") {
+          throw err
+        }
+
+        return false
+      }
 
       if (typeof verifyUser === "function" && !await verifyUser(data)) {
         return false;

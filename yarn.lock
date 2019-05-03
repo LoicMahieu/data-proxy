@@ -1425,22 +1425,22 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@react-admin-git-provider/common@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/common/-/common-0.0.3.tgz#d999763d69863253dbcb35dfcba7e5e69e58cbca"
-  integrity sha512-wwut6fd40gYhyvwzkW0hPQfd6X0wzTYk8S0cIyhWZsnsjyVHO74I2OvDs/nAnPsCbZ4dZ7Jf2350gS9leQBxog==
+"@react-admin-git-provider/common@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/common/-/common-0.0.4.tgz#3d6f5dab371a722d8e620a51a49bd1751b8f2d89"
+  integrity sha512-iB3mXivZvNUbiYDrlEht8fMVsEcG4/HN9bB+q6AELD8VPlFUEBbulG9MciHzYvUGLAcV8MoYJvZG5J6YLQSjVA==
   dependencies:
     localforage "^1.7.3"
     lodash "^4.17.11"
     p-limit "^2.2.0"
     uuid "^3.3.2"
 
-"@react-admin-git-provider/gitlab@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.0.4.tgz#e2e70420c167665a67ac3873842c64c16abe8407"
-  integrity sha512-VKa2nrW6z+wBt32CO1CRDjWEsEGIRAMObCf71ypwBhgOY6fRLV/2THuA3naWc4SiQusnq9R/8DUxschz6WtRQQ==
+"@react-admin-git-provider/gitlab@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.0.5.tgz#289965945e9ba9f486f9fd7fd4f8a73d77557716"
+  integrity sha512-akJ2JxKlzPFwi2AGrfUeVDSPE+AdtViGRNhfN0HbTkwMnGeg+aTBn/XZFhtJPhdhhjgWCDBKQ9osE2G9nPs+ZA==
   dependencies:
-    "@react-admin-git-provider/common" "^0.0.3"
+    "@react-admin-git-provider/common" "^0.0.4"
     ky "^0.10.0"
     lodash "^4.17.11"
     p-limit "^2.2.0"

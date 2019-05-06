@@ -18,7 +18,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@react-admin-git-provider/gitlab": "^0.0.5"
+    "@react-admin-git-provider/gitlab": "^0.0.7"
   },
   "devDependencies": {
     "tslint": "^5.16.0",

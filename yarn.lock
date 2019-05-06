@@ -1425,22 +1425,22 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@react-admin-git-provider/common@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/common/-/common-0.0.4.tgz#3d6f5dab371a722d8e620a51a49bd1751b8f2d89"
-  integrity sha512-iB3mXivZvNUbiYDrlEht8fMVsEcG4/HN9bB+q6AELD8VPlFUEBbulG9MciHzYvUGLAcV8MoYJvZG5J6YLQSjVA==
+"@react-admin-git-provider/common@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/common/-/common-0.0.6.tgz#5373db0cc6dc3662144af0864781500106eb246f"
+  integrity sha512-WtxqS2gjoUPa5+o6OVqKTHT8nPul+rEQALNgrb1abMgS62YrSalaJqumJ64urIDfYPbhu3+wYUqMyzFJvRCgSw==
   dependencies:
     localforage "^1.7.3"
     lodash "^4.17.11"
     p-limit "^2.2.0"
     uuid "^3.3.2"
 
-"@react-admin-git-provider/gitlab@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.0.5.tgz#289965945e9ba9f486f9fd7fd4f8a73d77557716"
-  integrity sha512-akJ2JxKlzPFwi2AGrfUeVDSPE+AdtViGRNhfN0HbTkwMnGeg+aTBn/XZFhtJPhdhhjgWCDBKQ9osE2G9nPs+ZA==
+"@react-admin-git-provider/gitlab@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.0.7.tgz#2a1a7881ae925440a320068a0db2ca29682c02f5"
+  integrity sha512-VgJMTwuLws8PmtpCHQApcW6Gb4cEvs6cE0vxjsCwZY3WQU13wyT2wTMO5nNVlOpJboFpS+xynIkfDEBavu9R4g==
   dependencies:
-    "@react-admin-git-provider/common" "^0.0.4"
+    "@react-admin-git-provider/common" "^0.0.6"
     ky "^0.10.0"
     lodash "^4.17.11"
     p-limit "^2.2.0"
@@ -1516,10 +1516,10 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
-"@types/fs-extra@^5.0.5":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.0.5.tgz#080d90a792f3fa2c5559eb44bd8ef840aae9104b"
-  integrity sha512-w7iqhDH9mN8eLClQOYTkhdYUOSpp25eXxfc6VbFOGtzxW34JcvctH2bKjj4jD4++z4R5iO5D+pg48W2e03I65A==
+"@types/fs-extra@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.1.0.tgz#2a325ef97901504a3828718c390d34b8426a10a1"
+  integrity sha512-AInn5+UBFIK9FK5xc9yP5e3TQSPNNgjHByqYcj9g5elVBnDQcQL7PlO1CIRy2gWlbwK7UPYqi7vRvFA44dCmYQ==
   dependencies:
     "@types/node" "*"
 
@@ -6819,10 +6819,10 @@ octokit-pagination-methods@^1.1.0:
   resolved "https://registry.yarnpkg.com/octokit-pagination-methods/-/octokit-pagination-methods-1.1.0.tgz#cf472edc9d551055f9ef73f6e42b4dbb4c80bea4"
   integrity sha512-fZ4qZdQ2nxJvtcasX7Ghl+WlWS/d9IgnBIwFZXVNNZUmzpno91SX5bc5vuxiuKoCtK78XxGGNuSCrDC7xYB3OQ==
 
-omnipartners@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/omnipartners/-/omnipartners-2.1.0.tgz#e6866e8e07ddf849beb6c5e3e049f3460e62617f"
-  integrity sha512-7CWhzJPoIdtsPKzSeToqmpWIl/Dm3LZb8McNa3xwJ1VuqM7j9b7S7GDxKj8oZAnVEPwHLzog2UN3q3zzVyUXEw==
+omnipartners@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/omnipartners/-/omnipartners-2.1.1.tgz#6f60a26291c14a70ca3f975785141b78678d2d37"
+  integrity sha512-f4tzhAbxhmQhe6QHWgS9HJOdFBgO1RQU0cohZggNV6oOSBzMIqn47OMCPKL44Xxhqp8PJkI23anGsH6RTLDLcQ==
   dependencies:
     boom "^7.3.0"
     depd "^2.0.0"
@@ -7249,6 +7249,11 @@ picomatch@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.0.5.tgz#067456ff321d6447ca3dc32273d7bbf19ab2face"
   integrity sha512-Zisqgaq/4P05ZclrU/g5XrzFqVo7YiJx+EP4haeVI9S7kvtZmZgmQMZfcvjEus9JcMhqZfQZObimT5ZydvKJGA==
+
+picomatch@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.0.6.tgz#f39cfedd26213982733ae6b819d3da0e736598d5"
+  integrity sha512-Btng9qVvFsW6FkXYQQK5nEI5i8xdXFDmlKxC7Q8S2Bu5HGWnbQf7ts2kOoxJIrZn5hmw61RZIayAg2zBuJDtyQ==
 
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"
@@ -9579,10 +9584,10 @@ webidl-conversions@^4.0.2:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
   integrity sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==
 
-webpack-cli@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.3.1.tgz#98b0499c7138ba9ece8898bd99c4f007db59909d"
-  integrity sha512-c2inFU7SM0IttEgF7fK6AaUsbBnORRzminvbyRKS+NlbQHVZdCtzKBlavRL5359bFsywXGRAItA5di/IruC8mg==
+webpack-cli@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.3.2.tgz#aed2437b0db0a7faa2ad28484e166a5360014a91"
+  integrity sha512-FLkobnaJJ+03j5eplxlI0TUxhGCOdfewspIGuvDVtpOlrAuKMFC57K42Ukxqs1tn8947/PM6tP95gQc0DCzRYA==
   dependencies:
     chalk "^2.4.1"
     cross-spawn "^6.0.5"

@@ -6,7 +6,7 @@ export interface IAuthBaseOptions {
   jwtSecret: string;
   jwtSignOptions?: SignOptions;
 
-  check: (login: string) => Promise<boolean>;
+  check: (login?: string) => Promise<boolean>;
   verifyPassword: (
     login: string,
     password: string,
@@ -29,10 +29,10 @@ export const authBase = (options: IAuthBaseOptions): IAuthBackend => ({
 });
 
 const createAuthCheck = (options: IAuthBaseOptions) => async (
-  authorizationHeader: string,
+  authorizationHeader?: string,
 ) => {
   let data: IAuthTokenData | undefined;
-  const [authType, token] = authorizationHeader.split(" ");
+  const [authType, token] = authorizationHeader ? authorizationHeader.split(" ") : ["", ""];
 
   if (authType !== "Bearer" || !token) {
     return false;

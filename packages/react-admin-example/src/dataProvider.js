@@ -1,8 +1,8 @@
 import {
   createDataProvider,
   GitlabProviderFileList,
+  GitlabProviderPipeline,
 } from "@data-proxy/react-admin-provider";
-import { GitlabProviderPipeline } from "@react-admin-git-provider/gitlab";
 
 const baseProviderOptions = {
   projectId: process.env.GITLAB_PROJECT_ID,

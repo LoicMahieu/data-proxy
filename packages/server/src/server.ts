@@ -199,7 +199,10 @@ const listPipelines = (serverOptions: IServerOptions) =>
       });
     }
 
-    if (!authorization) {
+    if (
+      !authorization ||
+      !(await serverOptions.auth.authCheck(authorization))
+    ) {
       throw Boom.unauthorized();
     }
 
@@ -212,7 +215,7 @@ const listPipelines = (serverOptions: IServerOptions) =>
     res.send(body);
   });
 
-  const triggerPipeline = (serverOptions: IServerOptions) =>
+const triggerPipeline = (serverOptions: IServerOptions) =>
   asyncHandler(async (req, res, next) => {
     const authorization = req.get("Authorization");
     const { ref } = req.query;
@@ -224,7 +227,10 @@ const listPipelines = (serverOptions: IServerOptions) =>
       });
     }
 
-    if (!authorization) {
+    if (
+      !authorization ||
+      !(await serverOptions.auth.authCheck(authorization))
+    ) {
       throw Boom.unauthorized();
     }
 
@@ -247,7 +253,10 @@ const getPipeline = (serverOptions: IServerOptions) =>
       await serverOptions.before({});
     }
 
-    if (!authorization) {
+    if (
+      !authorization ||
+      !(await serverOptions.auth.authCheck(authorization))
+    ) {
       throw Boom.unauthorized();
     }
 

@@ -1,4 +1,8 @@
-import { createDataProvider, GitlabProviderFileList } from "@data-proxy/react-admin-provider";
+import {
+  createDataProvider,
+  GitlabProviderFileList,
+} from "@data-proxy/react-admin-provider";
+import { GitlabProviderPipeline } from "@react-admin-git-provider/gitlab";
 
 const baseProviderOptions = {
   projectId: process.env.GITLAB_PROJECT_ID,
@@ -9,10 +13,14 @@ const baseProviderOptions = {
 };
 
 export const getProviderForResource = resource =>
-  new GitlabProviderFileList({
-    ...baseProviderOptions,
-    basePath: `${process.env.GITLAB_DATA_BASE_PATH}/${resource}`,
-  });
+  resource === "pipelines"
+    ? new GitlabProviderPipeline({
+        ...baseProviderOptions,
+      })
+    : new GitlabProviderFileList({
+        ...baseProviderOptions,
+        basePath: `${process.env.GITLAB_DATA_BASE_PATH}/${resource}`,
+      });
 
 export const dataProvider = createDataProvider(({ resource }) =>
   getProviderForResource(resource),

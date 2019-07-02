@@ -14,7 +14,7 @@ export interface IAuthBaseOptions {
 }
 
 export interface IAuthBackend {
-  authCheck: (authorizationHeader: string) => Promise<false | IAuthTokenData>;
+  authCheck: (authorizationHeader?: string) => Promise<false | IAuthTokenData>;
   authLogin: (body: any) => Promise<string | undefined>;
 }
 

@@ -4,7 +4,9 @@ import querystring from "querystring";
 import { Omit } from "type-fest";
 import {
   IBackend,
+  IBackendBaseOptions,
   IBackendCommitOptions,
+  IBackendListPipelinesOptions,
   IBackendReadFileOptions,
   IBackendTreeOptions,
 } from "./interface";
@@ -17,7 +19,17 @@ const basePickHeaders = [
   "ratelimit-resettime",
   "x-request-id",
   "x-runtime",
+  "x-next-page",
+  "x-page",
+  "x-per-page",
+  "x-prev-page",
+  "x-total",
+  "x-total-pages",
 ];
+
+const paginationPickHeaders = [
+
+]
 
 const defaultGitlabOptions: Omit<IBackendGitlabOptions, "privateToken"> = {
   host: "https://gitlab.com",
@@ -53,17 +65,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => ({
 
     return {
       body,
-      headers: pick(headers, [
-        ...basePickHeaders,
-        "x-next-page",
-        "x-page",
-        "x-per-page",
-        "x-prev-page",
-        "x-request-id",
-        "x-runtime",
-        "x-total",
-        "x-total-pages",
-      ]),
+      headers: pick(headers, basePickHeaders),
     };
   },
   async readFile({ projectId, ref, file }: IBackendReadFileOptions) {
@@ -117,7 +119,76 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => ({
 
     return {
       body,
-      headers: pick(headers, [...basePickHeaders]),
+      headers: pick(headers, basePickHeaders),
+    };
+  },
+
+  async listPipelines({ projectId, ref }: IBackendListPipelinesOptions) {
+    const { body, headers } = await got(
+      `/projects/${encodeURIComponent(projectId)}/pipelines?` +
+        querystring.stringify({
+          ref,
+        }),
+      {
+        baseUrl: getBaseUrl(options),
+        headers: {
+          "Private-Token": options.privateToken,
+        },
+        json: true,
+        timeout: options.timeout,
+      },
+    );
+
+    return {
+      body,
+      headers: pick(headers, basePickHeaders),
+    };
+  },
+
+  async triggerPipeline({ projectId, ref }: IBackendListPipelinesOptions) {
+    const { body, headers } = await got(
+      `/projects/${encodeURIComponent(projectId)}/pipeline?` +
+        querystring.stringify({
+          ref,
+        }),
+      {
+        baseUrl: getBaseUrl(options),
+        headers: {
+          "Private-Token": options.privateToken,
+        },
+        json: true,
+        method: "POST",
+        timeout: options.timeout,
+      },
+    );
+
+    return {
+      body,
+      headers: pick(headers, basePickHeaders),
+    };
+  },
+
+  async getPipeline({
+    projectId,
+    id,
+  }: IBackendBaseOptions & {
+    id: string;
+  }) {
+    const { body, headers } = await got(
+      `/projects/${encodeURIComponent(projectId)}/pipelines/${id}`,
+      {
+        baseUrl: getBaseUrl(options),
+        headers: {
+          "Private-Token": options.privateToken,
+        },
+        json: true,
+        timeout: options.timeout,
+      },
+    );
+
+    return {
+      body,
+      headers: pick(headers, basePickHeaders),
     };
   },
 });

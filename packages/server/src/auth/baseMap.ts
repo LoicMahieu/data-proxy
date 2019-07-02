@@ -19,7 +19,7 @@ export const authBaseMap = (options: IAuthBaseMapOptions): IAuthBackend =>
         return true
       }
       const authMap = typeof options.authMap === 'function' ? await options.authMap() : options.authMap;
-      return !!authMap[login];
+      return !!login && !!authMap[login];
     },
     verifyPassword: async (login, password) => {
       const authMap = typeof options.authMap === 'function' ? await options.authMap() : options.authMap;

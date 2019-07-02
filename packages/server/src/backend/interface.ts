@@ -1,7 +1,7 @@
 import { OutgoingHttpHeaders } from "http";
 import { ICommitBody } from "../types";
 
-interface IBackendBaseOptions {
+export interface IBackendBaseOptions {
   projectId: string;
 }
 
@@ -30,6 +30,10 @@ export interface IBackendFile {
   file_path: string;
 }
 
+export interface IBackendListPipelinesOptions extends IBackendBaseOptions {
+  ref: string;
+}
+
 export interface IBackend {
   tree(
     options: IBackendTreeOptions,
@@ -39,5 +43,17 @@ export interface IBackend {
   ): Promise<{ headers: OutgoingHttpHeaders; body: IBackendFile }>;
   commit(
     options: IBackendCommitOptions,
+  ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
+
+  listPipelines(
+    options: IBackendListPipelinesOptions
+  ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
+  triggerPipeline(
+    options: IBackendListPipelinesOptions
+  ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
+  getPipeline(
+    options: IBackendBaseOptions & {
+      id: string
+    }
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
 }

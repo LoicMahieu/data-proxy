@@ -132,4 +132,25 @@ export const backendFilesystem = (
       headers: {},
     };
   },
+
+  async listPipelines() {
+    return {
+      body: [],
+      headers: {}
+    }
+  },
+
+  async triggerPipeline() {
+    return {
+      body: {},
+      headers: {}
+    }
+  },
+
+  async getPipeline() {
+    return {
+      body: {},
+      headers: {}
+    }
+  }
 });

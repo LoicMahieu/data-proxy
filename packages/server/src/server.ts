@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import Boom from "boom";
 import { Application, ErrorRequestHandler } from "express";
 import asyncHandler from "express-async-handler";
+import { GotError } from "got";
 import { ICommitBody, IServerOptions } from "./types";
 
 export async function applyMiddlewares(
@@ -31,10 +32,27 @@ export async function applyMiddlewares(
     commit(serverOptions),
   );
 
+  app.get(
+    `${prefix}/api/v4/projects/${projectId}/pipelines`,
+    listPipelines(serverOptions),
+  );
+  app.get(
+    `${prefix}/api/v4/projects/${projectId}/pipelines/:id`,
+    getPipeline(serverOptions),
+  );
+  app.post(
+    `${prefix}/api/v4/projects/${projectId}/pipeline`,
+    triggerPipeline(serverOptions),
+  );
+
   const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (Boom.isBoom(err)) {
       res.set(err.output.headers);
       res.status(err.output.statusCode).send(err.output.payload);
+      return;
+    }
+    if (err.gotOptions) {
+      res.status(err.statusCode).send(err.body);
       return;
     }
     next(err);
@@ -154,11 +172,87 @@ const commit = (serverOptions: IServerOptions) =>
 
     let beforeCommitResult: void | ICommitBody;
     if (serverOptions.beforeCommit) {
-      beforeCommitResult = await serverOptions.beforeCommit(commitBody, authData);
+      beforeCommitResult = await serverOptions.beforeCommit(
+        commitBody,
+        authData,
+      );
     }
 
     const { body, headers } = await serverOptions.backend.commit({
       commitBody: beforeCommitResult ? beforeCommitResult : commitBody,
+      projectId,
+    });
+
+    res.set(headers);
+    res.send(body);
+  });
+
+const listPipelines = (serverOptions: IServerOptions) =>
+  asyncHandler(async (req, res, next) => {
+    const authorization = req.get("Authorization");
+    const { ref } = req.query;
+    const { projectId } = serverOptions;
+
+    if (serverOptions.before) {
+      await serverOptions.before({
+        ref,
+      });
+    }
+
+    if (!authorization) {
+      throw Boom.unauthorized();
+    }
+
+    const { body, headers } = await serverOptions.backend.listPipelines({
+      projectId,
+      ref,
+    });
+
+    res.set(headers);
+    res.send(body);
+  });
+
+  const triggerPipeline = (serverOptions: IServerOptions) =>
+  asyncHandler(async (req, res, next) => {
+    const authorization = req.get("Authorization");
+    const { ref } = req.query;
+    const { projectId } = serverOptions;
+
+    if (serverOptions.before) {
+      await serverOptions.before({
+        ref,
+      });
+    }
+
+    if (!authorization) {
+      throw Boom.unauthorized();
+    }
+
+    const { body, headers } = await serverOptions.backend.triggerPipeline({
+      projectId,
+      ref,
+    });
+
+    res.set(headers);
+    res.send(body);
+  });
+
+const getPipeline = (serverOptions: IServerOptions) =>
+  asyncHandler(async (req, res, next) => {
+    const authorization = req.get("Authorization");
+    const { id } = req.params;
+    const { projectId } = serverOptions;
+
+    if (serverOptions.before) {
+      await serverOptions.before({});
+    }
+
+    if (!authorization) {
+      throw Boom.unauthorized();
+    }
+
+    const { body, headers } = await serverOptions.backend.getPipeline({
+      id: `${id}`,
       projectId,
     });
 

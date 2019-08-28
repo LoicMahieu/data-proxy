@@ -1,6 +1,6 @@
 {
   "name": "@data-proxy/react-admin-example",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server"
@@ -9,8 +9,8 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "@data-proxy/react-admin-provider": "^0.1.5",
-    "@data-proxy/server": "^0.2.5",
+    "@data-proxy/react-admin-provider": "^0.1.6",
+    "@data-proxy/server": "^0.2.6",
     "@material-ui/core": "^4",
     "@material-ui/icons": "^4",
     "babel-loader": "^8.0.6",

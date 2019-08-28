@@ -6,22 +6,22 @@
     "start": "webpack-dev-server"
   },
   "dependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@data-proxy/react-admin-provider": "^0.1.5",
     "@data-proxy/server": "^0.2.5",
-    "@material-ui/core": "^1",
-    "@material-ui/icons": "^1",
+    "@material-ui/core": "^4",
+    "@material-ui/icons": "^4",
     "babel-loader": "^8.0.6",
     "babel-polyfill": "^6.26.0",
     "html-webpack-plugin": "^3.2.0",
-    "react": "^16.8.6",
-    "react-admin": "^2.9.4",
-    "react-dom": "^16.8.6",
-    "webpack": "^4.35.2",
-    "webpack-cli": "^3.3.5",
-    "webpack-dev-server": "^3.7.2"
+    "react": "^16.9.0",
+    "react-admin": "^2.9.6",
+    "react-dom": "^16.9.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
   },
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1"

@@ -21,8 +21,8 @@
     "@react-admin-git-provider/gitlab": "^0.0.9"
   },
   "devDependencies": {
-    "tslint": "^5.18.0",
-    "type-fest": "^0.5.2",
-    "typescript": "^3.5.2"
+    "tslint": "^5.19.0",
+    "type-fest": "^0.7.1",
+    "typescript": "^3.6.2"
   }
 }

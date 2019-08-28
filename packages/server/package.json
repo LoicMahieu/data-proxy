@@ -29,26 +29,26 @@
     "got": "^9.6.0",
     "hasha": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "micromatch": "^4.0.2",
     "morgan": "^1.9.1",
     "picomatch": "^2.0.7"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
-    "@types/boom": "^7.2.1",
-    "@types/cors": "^2.8.5",
-    "@types/express": "^4.17.0",
+    "@types/boom": "^7.3.0",
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.1",
     "@types/fs-extra": "^8.0.0",
-    "@types/got": "^9.6.0",
-    "@types/jsonwebtoken": "^8.3.2",
-    "@types/lodash": "^4.14.135",
+    "@types/got": "^9.6.7",
+    "@types/jsonwebtoken": "^8.3.3",
+    "@types/lodash": "^4.14.138",
     "@types/micromatch": "^3.1.0",
-    "@types/morgan": "^1.7.35",
+    "@types/morgan": "^1.7.37",
     "nodemon": "^1.19.1",
     "ts-node": "^8.3.0",
-    "tslint": "^5.18.0",
-    "type-fest": "^0.5.2",
-    "typescript": "^3.5.2"
+    "tslint": "^5.19.0",
+    "type-fest": "^0.7.1",
+    "typescript": "^3.6.2"
   }
 }

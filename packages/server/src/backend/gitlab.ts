@@ -1,7 +1,6 @@
 import got from "got";
 import pick from "lodash/pick";
 import querystring from "querystring";
-import { Omit } from "type-fest";
 import {
   IBackend,
   IBackendBaseOptions,

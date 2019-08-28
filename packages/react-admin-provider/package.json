@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "tslint": "^5.19.0",
-    "type-fest": "^0.7.1",
     "typescript": "^3.6.2"
   }
 }

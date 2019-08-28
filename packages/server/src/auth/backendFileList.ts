@@ -1,4 +1,3 @@
-import { Omit } from "type-fest";
 import { ILoadFileListOptions, loadFileList } from "../utils/loadFileList";
 import { IAuthBackend } from "./base";
 import { authBaseMap, IAuthBaseMapOptions } from "./baseMap";

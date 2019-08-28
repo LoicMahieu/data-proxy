@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import { Omit } from "type-fest";
 import { authBase, IAuthBackend, IAuthBaseOptions } from "./base";
 
 export interface IAuthBaseMapOptions extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {

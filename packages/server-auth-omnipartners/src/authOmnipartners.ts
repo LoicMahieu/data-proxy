@@ -1,6 +1,5 @@
 import { authBase, IAuthBackend, IAuthBaseOptions } from "@data-proxy/server";
 import { IUser, IUserDataOptions, Omnipartners } from "omnipartners";
-import { Omit } from "type-fest";
 
 export interface IAuthBaseMapOptions
   extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {

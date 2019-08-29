@@ -1,13 +1,13 @@
 const KEY = "react-admin.data-proxy.token";
 
 export function getToken() {
-  return window.sessionStorage.getItem(KEY) || undefined;
+  return window.localStorage.getItem(KEY) || undefined;
 }
 export function setToken(value: string) {
-  return window.sessionStorage.setItem(KEY, value);
+  return window.localStorage.setItem(KEY, value);
 }
 export function removeToken() {
-  return window.sessionStorage.removeItem(KEY);
+  return window.localStorage.removeItem(KEY);
 }
 
 export interface IAuthOptions {

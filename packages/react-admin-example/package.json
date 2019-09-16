@@ -6,8 +6,8 @@
     "start": "webpack-dev-server"
   },
   "dependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
     "@data-proxy/react-admin-provider": "^0.1.8",
     "@data-proxy/server": "^0.2.7",
@@ -19,9 +19,9 @@
     "react": "^16.9.0",
     "react-admin": "^2.9.6",
     "react-dom": "^16.9.0",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7",
-    "webpack-dev-server": "^3.8.0"
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.1"
   },
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1"

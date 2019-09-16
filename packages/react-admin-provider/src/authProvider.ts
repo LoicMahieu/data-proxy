@@ -1,21 +1,12 @@
-const KEY = "react-admin.data-proxy.token";
-
-export function getToken() {
-  return window.localStorage.getItem(KEY) || undefined;
-}
-export function setToken(value: string) {
-  return window.localStorage.setItem(KEY, value);
-}
-export function removeToken() {
-  return window.localStorage.removeItem(KEY);
-}
+import { AbstractAuthBridge, LocalStorageAuthBridge } from "@react-admin-git-provider/common";
 
 export interface IAuthOptions {
   host: string;
   projectId: string;
+  authBridge?: AbstractAuthBridge;
 }
 
-export const createAuthProvider = ({ host, projectId }: IAuthOptions) => async (
+export const createAuthProvider = ({ host, projectId, authBridge = new LocalStorageAuthBridge() }: IAuthOptions) => async (
   type: string,
   params: { login: string; password: string },
 ) => {
@@ -38,18 +29,18 @@ export const createAuthProvider = ({ host, projectId }: IAuthOptions) => async (
         throw new Error(res.statusText);
       }
       const { token } = await res.json();
-      setToken(token);
+      authBridge.setToken(token);
       return Promise.resolve();
     }
     if (type === "AUTH_LOGOUT") {
-      removeToken();
+      authBridge.removeToken();
       return Promise.resolve();
     }
     if (type === "AUTH_ERROR") {
       return Promise.resolve();
     }
     if (type === "AUTH_CHECK") {
-      return getToken() ? Promise.resolve() : Promise.reject();
+      return authBridge.getToken() ? Promise.resolve() : Promise.reject();
     }
     return Promise.reject("Unknown method");
   } catch (err) {

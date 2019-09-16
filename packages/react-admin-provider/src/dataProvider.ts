@@ -1,33 +1,6 @@
-import {
+export {
   createDataProvider,
-  GitlabProviderFileList as BaseGitlabProviderFileList,
+  GitlabProviderFileList,
   GitlabProviderFileListOptions,
-  GitlabProviderPipeline as BaseGitlabProviderPipeline,
+  GitlabProviderPipeline,
 } from "@react-admin-git-provider/gitlab";
-import { getToken } from "./authProvider";
-
-export { createDataProvider };
-
-export class GitlabProviderFileList extends BaseGitlabProviderFileList {
-  constructor(options: GitlabProviderFileListOptions) {
-    super({
-      ...options,
-      gitlabOptions: {
-        ...options.gitlabOptions,
-        oauthToken: getToken(),
-      },
-    });
-  }
-}
-
-export class GitlabProviderPipeline extends BaseGitlabProviderPipeline {
-  constructor(options: GitlabProviderFileListOptions) {
-    super({
-      ...options,
-      gitlabOptions: {
-        ...options.gitlabOptions,
-        oauthToken: getToken(),
-      },
-    });
-  }
-}

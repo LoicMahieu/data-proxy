@@ -45,9 +45,9 @@
     "@types/lodash": "^4.14.138",
     "@types/micromatch": "^3.1.0",
     "@types/morgan": "^1.7.37",
-    "nodemon": "^1.19.1",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.19.0",
-    "typescript": "^3.6.2"
+    "nodemon": "^1.19.2",
+    "ts-node": "^8.4.1",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
   }
 }

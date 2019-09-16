@@ -1782,13 +1782,14 @@
     p-limit "^2.2.1"
     uuid "^3.3.3"
 
-"@react-admin-git-provider/gitlab@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.1.1.tgz#976cb6dd9ff7e4850ea408068bd2c0c1d69d1f22"
-  integrity sha512-0XaEI33I5VxVarMIueP09K+5N2hu6G3mV/hG3n0WuBLTkptiiv09ZCxSpOHtZtHBRn6+g3UjsDzOhs5NA2sVOQ==
+"@react-admin-git-provider/gitlab@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@react-admin-git-provider/gitlab/-/gitlab-0.2.0.tgz#611d152fdd2274719bf2cd40bd0a521b6d8499f2"
+  integrity sha512-y8/dyotufv/OCkpudH/xHXJqnS+FG6vVxIn+F/G+zLIU7KCw+VT+48otV4wW1wdlm865ywJjCMZ+JqPL+IlnSQ==
   dependencies:
     "@react-admin-git-provider/common" "^0.1.0"
     ky "^0.14.0"
+    ky-universal "^0.3.0"
     lodash "^4.17.15"
     p-limit "^2.2.1"
 
@@ -2175,6 +2176,13 @@ abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
   integrity sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==
+
+abort-controller@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/abort-controller/-/abort-controller-3.0.0.tgz#eaf54d53b62bae4138e809ca225c8439a6efb392"
+  integrity sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==
+  dependencies:
+    event-target-shim "^5.0.0"
 
 accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.7:
   version "1.3.7"
@@ -4372,6 +4380,11 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
+event-target-shim@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
+  integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
+
 eventemitter3@^3.0.0, eventemitter3@^3.1.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
@@ -6322,6 +6335,14 @@ kuler@1.0.x:
   integrity sha512-J9nVUucG1p/skKul6DU3PUZrhs0LPulNaeUOox0IyXDi8S4CztTHs1gQphhuZmzXG7VOQSf6NJfKuzteQLv9gQ==
   dependencies:
     colornames "^1.1.1"
+
+ky-universal@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/ky-universal/-/ky-universal-0.3.0.tgz#3fcbb0dd03da39b5f05100d9362a630d5e1d402e"
+  integrity sha512-CM4Bgb2zZZpsprcjI6DNYTaH3oGHXL2u7BU4DK+lfCuC4snkt9/WRpMYeKbBbXscvKkeqBwzzjFX2WwmKY5K/A==
+  dependencies:
+    abort-controller "^3.0.0"
+    node-fetch "^2.6.0"
 
 ky@^0.14.0:
   version "0.14.0"

@@ -2,6 +2,7 @@ import Boom from "boom";
 import fs from "fs-extra";
 import hasha from "hasha";
 import path from "path";
+import { v4 as uuid } from "uuid";
 import { ICommitAction } from "../types";
 import {
   IBackend,
@@ -136,21 +137,33 @@ export const backendFilesystem = (
   async listPipelines() {
     return {
       body: [],
-      headers: {}
-    }
+      headers: {},
+    };
   },
 
   async triggerPipeline() {
     return {
       body: {},
-      headers: {}
-    }
+      headers: {},
+    };
   },
 
   async getPipeline() {
     return {
       body: {},
-      headers: {}
-    }
-  }
+      headers: {},
+    };
+  },
+
+  async showBranch({ ref }) {
+    return {
+      body: {
+        commit: {
+          id: uuid(),
+        },
+        name: ref,
+      },
+      headers: {},
+    };
+  },
 });

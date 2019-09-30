@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {
   applyMiddlewares,
   backendGitlab,
+  backendFilesystem
 } = require("@data-proxy/server");
 const {
   authOmnipartners,
@@ -41,8 +42,8 @@ module.exports = {
     disableHostCheck: true,
     before: app => {
       applyMiddlewares(app, {
-        backend: backendGitlab({
-          privateToken: process.env.GITLAB_PRIVATE_TOKEN
+        backend: backendFilesystem({
+          cwd: __dirname
         }),
         auth: authOmnipartners({
           jwtSecret: "xxxxxxxx",
@@ -66,5 +67,32 @@ module.exports = {
         projectId: process.env.GITLAB_PROJECT_ID,
       });
     },
+    // before: app => {
+    //   applyMiddlewares(app, {
+    //     backend: backendGitlab({
+    //       privateToken: process.env.GITLAB_PRIVATE_TOKEN
+    //     }),
+    //     auth: authOmnipartners({
+    //       jwtSecret: "xxxxxxxx",
+    //       omnipartners: omnipartners(JSON.parse(process.env.OMNIPARTNERS_CONFIG)),
+    //       // verifyUser: verifyUserFromFileList({
+    //       //   backend,
+    //       //   path: `${process.env.DATASTORE_BASE_PATH}/adminUsers`,
+    //       //   projectId: process.env.GITLAB_PROJECT_ID || "",
+    //       //   ref: process.env.GITLAB_REF || "",
+    //       // }),
+    //     }),
+    //     beforeCommit: async (commit, authData) => ({
+    //       ...commit,
+    //       author_email: get(authData, "user.owner.email"),
+    //       author_name: `${get(authData, "user.owner.firstName")} ${get(
+    //         authData,
+    //         "user.owner.lastName",
+    //       )} (${get(authData, "user.owner.guid")})`,
+    //     }),
+    //     prefix: '/admin/',
+    //     projectId: process.env.GITLAB_PROJECT_ID,
+    //   });
+    // },
   },
 };

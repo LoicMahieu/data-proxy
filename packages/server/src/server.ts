@@ -2,7 +2,6 @@ import bodyParser from "body-parser";
 import Boom from "boom";
 import { Application, ErrorRequestHandler } from "express";
 import asyncHandler from "express-async-handler";
-import { GotError } from "got";
 import { ICommitBody, IServerOptions } from "./types";
 
 export async function applyMiddlewares(
@@ -30,6 +29,11 @@ export async function applyMiddlewares(
     `${prefix}/api/v4/projects/${projectId}/repository/commits`,
     bodyParser.json(),
     commit(serverOptions),
+  );
+  app.get(
+    `${prefix}/api/v4/projects/${projectId}/repository/branches/:ref`,
+    bodyParser.json(),
+    branch(serverOptions),
   );
 
   app.get(
@@ -263,6 +267,32 @@ const getPipeline = (serverOptions: IServerOptions) =>
     const { body, headers } = await serverOptions.backend.getPipeline({
       id: `${id}`,
       projectId,
+    });
+
+    res.set(headers);
+    res.send(body);
+  });
+
+const branch = (serverOptions: IServerOptions) =>
+  asyncHandler(async (req, res, next) => {
+    const authorization = req.get("Authorization");
+    const { ref } = req.params;
+    const { projectId } = serverOptions;
+
+    if (serverOptions.before) {
+      await serverOptions.before({});
+    }
+
+    if (
+      !authorization ||
+      !(await serverOptions.auth.authCheck(authorization))
+    ) {
+      throw Boom.unauthorized();
+    }
+
+    const { body, headers } = await serverOptions.backend.showBranch({
+      projectId,
+      ref: `${ref}`,
     });
 
     res.set(headers);

@@ -46,14 +46,20 @@ export interface IBackend {
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
 
   listPipelines(
-    options: IBackendListPipelinesOptions
+    options: IBackendListPipelinesOptions,
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
   triggerPipeline(
-    options: IBackendListPipelinesOptions
+    options: IBackendListPipelinesOptions,
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
   getPipeline(
     options: IBackendBaseOptions & {
-      id: string
-    }
+      id: string;
+    },
+  ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
+
+  showBranch(
+    options: IBackendBaseOptions & {
+      ref: string;
+    },
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;
 }

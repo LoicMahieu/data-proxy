@@ -26,9 +26,7 @@ const basePickHeaders = [
   "x-total-pages",
 ];
 
-const paginationPickHeaders = [
-
-]
+const paginationPickHeaders = [];
 
 const defaultGitlabOptions: Omit<IBackendGitlabOptions, "privateToken"> = {
   host: "https://gitlab.com",
@@ -185,6 +183,29 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => ({
       },
     );
 
+    return {
+      body,
+      headers: pick(headers, basePickHeaders),
+    };
+  },
+
+  async showBranch({ projectId, ref }) {
+    const { body, headers } = await got(
+      `/projects/${encodeURIComponent(
+        projectId,
+      )}/repository/branches/${encodeURIComponent(ref)}?` +
+        querystring.stringify({
+          ref,
+        }),
+      {
+        baseUrl: getBaseUrl(options),
+        headers: {
+          "Private-Token": options.privateToken,
+        },
+        json: true,
+        timeout: options.timeout,
+      },
+    );
     return {
       body,
       headers: pick(headers, basePickHeaders),

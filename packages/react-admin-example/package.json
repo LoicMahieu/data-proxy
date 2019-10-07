@@ -1,6 +1,6 @@
 {
   "name": "@data-proxy/react-admin-example",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server"
@@ -9,7 +9,7 @@
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
-    "@data-proxy/react-admin-provider": "^0.4.0",
+    "@data-proxy/react-admin-provider": "^0.5.0",
     "@data-proxy/server": "^0.3.0",
     "@material-ui/core": "^4",
     "@material-ui/icons": "^4",

@@ -11,17 +11,17 @@
     "@babel/preset-react": "^7.0.0",
     "@data-proxy/react-admin-provider": "^0.4.0",
     "@data-proxy/server": "^0.3.0",
-    "@material-ui/core": "^1",
-    "@material-ui/icons": "^1",
+    "@material-ui/core": "^4",
+    "@material-ui/icons": "^4",
     "babel-loader": "^8.0.6",
     "babel-polyfill": "^6.26.0",
     "html-webpack-plugin": "^3.2.0",
-    "react": "^16.10.1",
-    "react-admin": "^2.9.6",
-    "react-dom": "^16.10.1",
+    "react": "^16.10.2",
+    "react-admin": "^2.9.7",
+    "react-dom": "^16.10.2",
     "webpack": "^4.41.0",
     "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.1"
+    "webpack-dev-server": "^3.8.2"
   },
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1"

@@ -150,7 +150,12 @@ export const backendFilesystem = (
     }
 
     return {
-      headers: {},
+      headers: {
+        "x-gitlab-blob-id": uuid(),
+        "x-gitlab-commit-id": uuid(),
+        "x-gitlab-content-sha256": uuid(),
+        "x-gitlab-size": 0,
+      },
     };
   },
 

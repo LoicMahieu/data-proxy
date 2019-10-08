@@ -1,15 +1,5 @@
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const {
-  applyMiddlewares,
-  backendGitlab,
-  backendFilesystem
-} = require("@data-proxy/server");
-const {
-  authOmnipartners,
-} = require("@data-proxy/server-auth-omnipartners")
-const omnipartners = require('omnipartners').default
-const get = require('lodash/get')
 
 module.exports = {
   module: {
@@ -40,59 +30,11 @@ module.exports = {
     port: 3000,
     host: "0.0.0.0",
     disableHostCheck: true,
-    before: app => {
-      applyMiddlewares(app, {
-        backend: backendFilesystem({
-          cwd: __dirname
-        }),
-        auth: authOmnipartners({
-          jwtSecret: "xxxxxxxx",
-          omnipartners: omnipartners(JSON.parse(process.env.OMNIPARTNERS_CONFIG)),
-          // verifyUser: verifyUserFromFileList({
-          //   backend,
-          //   path: `${process.env.DATASTORE_BASE_PATH}/adminUsers`,
-          //   projectId: process.env.GITLAB_PROJECT_ID || "",
-          //   ref: process.env.GITLAB_REF || "",
-          // }),
-        }),
-        beforeCommit: async (commit, authData) => ({
-          ...commit,
-          author_email: get(authData, "user.owner.email"),
-          author_name: `${get(authData, "user.owner.firstName")} ${get(
-            authData,
-            "user.owner.lastName",
-          )} (${get(authData, "user.owner.guid")})`,
-        }),
-        prefix: '/admin/',
-        projectId: process.env.GITLAB_PROJECT_ID,
-      });
+    proxy: {
+      '/admin': {
+        target: 'http://localhost:3001',
+        pathRewrite: {'^/admin' : ''}
+      }
     },
-    // before: app => {
-    //   applyMiddlewares(app, {
-    //     backend: backendGitlab({
-    //       privateToken: process.env.GITLAB_PRIVATE_TOKEN
-    //     }),
-    //     auth: authOmnipartners({
-    //       jwtSecret: "xxxxxxxx",
-    //       omnipartners: omnipartners(JSON.parse(process.env.OMNIPARTNERS_CONFIG)),
-    //       // verifyUser: verifyUserFromFileList({
-    //       //   backend,
-    //       //   path: `${process.env.DATASTORE_BASE_PATH}/adminUsers`,
-    //       //   projectId: process.env.GITLAB_PROJECT_ID || "",
-    //       //   ref: process.env.GITLAB_REF || "",
-    //       // }),
-    //     }),
-    //     beforeCommit: async (commit, authData) => ({
-    //       ...commit,
-    //       author_email: get(authData, "user.owner.email"),
-    //       author_name: `${get(authData, "user.owner.firstName")} ${get(
-    //         authData,
-    //         "user.owner.lastName",
-    //       )} (${get(authData, "user.owner.guid")})`,
-    //     }),
-    //     prefix: '/admin/',
-    //     projectId: process.env.GITLAB_PROJECT_ID,
-    //   });
-    // },
   },
 };

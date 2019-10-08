@@ -99,6 +99,57 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => ({
       ]),
     };
   },
+  async readFileRaw({ projectId, ref, file }: IBackendReadFileOptions) {
+    return got.stream(
+      `/projects/${encodeURIComponent(
+        projectId,
+      )}/repository/files/${encodeURIComponent(file)}/raw?` +
+        querystring.stringify({
+          ref,
+        }),
+      {
+        baseUrl: getBaseUrl(options),
+        headers: {
+          "Private-Token": options.privateToken,
+        },
+        timeout: options.timeout,
+      },
+    );
+  },
+  async headFile({ projectId, ref, file }: IBackendReadFileOptions) {
+    const { headers } = await got(
+      `/projects/${encodeURIComponent(
+        projectId,
+      )}/repository/files/${encodeURIComponent(file)}?` +
+        querystring.stringify({
+          ref,
+        }),
+      {
+        baseUrl: getBaseUrl(options),
+        headers: {
+          "Private-Token": options.privateToken,
+        },
+        json: true,
+        method: "head",
+        timeout: options.timeout,
+      },
+    );
+
+    return {
+      headers: pick(headers, [
+        ...basePickHeaders,
+        "x-gitlab-blob-id",
+        "x-gitlab-commit-id",
+        "x-gitlab-content-sha256",
+        "x-gitlab-encoding",
+        "x-gitlab-file-name",
+        "x-gitlab-file-path",
+        "x-gitlab-last-commit-id",
+        "x-gitlab-ref",
+        "x-gitlab-size",
+      ]),
+    };
+  },
   async commit({ projectId, commitBody }: IBackendCommitOptions) {
     const { body, headers } = await got(
       `/projects/${encodeURIComponent(projectId)}/repository/commits`,

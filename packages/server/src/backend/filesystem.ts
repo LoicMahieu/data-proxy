@@ -122,6 +122,38 @@ export const backendFilesystem = (
     };
   },
 
+  async readFileRaw({ projectId, ref, file }: IBackendReadFileOptions) {
+    const absFilePath = path.join(options.cwd, file);
+    if (!(await fs.pathExists(absFilePath))) {
+      throw Boom.notFound();
+    }
+
+    const stat = await fs.stat(absFilePath);
+
+    if (stat.isDirectory()) {
+      throw Boom.notFound();
+    }
+
+    return fs.createReadStream(absFilePath);
+  },
+
+  async headFile({ projectId, ref, file }: IBackendReadFileOptions) {
+    const absFilePath = path.join(options.cwd, file);
+    if (!(await fs.pathExists(absFilePath))) {
+      throw Boom.notFound();
+    }
+
+    const stat = await fs.stat(absFilePath);
+
+    if (stat.isDirectory()) {
+      throw Boom.notFound();
+    }
+
+    return {
+      headers: {},
+    };
+  },
+
   async commit({ projectId, commitBody }: IBackendCommitOptions) {
     await Promise.all(
       commitBody.actions.map(action => doCommitAction(action, options)),

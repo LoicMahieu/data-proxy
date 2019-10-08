@@ -22,8 +22,16 @@ export async function applyMiddlewares(
     tree(serverOptions),
   );
   app.get(
+    `${prefix}/api/v4/projects/${projectId}/repository/files/:file/raw`,
+    readFileRaw(serverOptions),
+  );
+  app.get(
     `${prefix}/api/v4/projects/${projectId}/repository/files/*`,
     readFile(serverOptions),
+  );
+  app.head(
+    `${prefix}/api/v4/projects/${projectId}/repository/files/*`,
+    headFile(serverOptions),
   );
   app.post(
     `${prefix}/api/v4/projects/${projectId}/repository/commits`,
@@ -140,6 +148,67 @@ const readFile = (serverOptions: IServerOptions) =>
 
     res.set(headers);
     res.send(body);
+  });
+
+const readFileRaw = (serverOptions: IServerOptions) =>
+  asyncHandler(async (req, res, next) => {
+    const file = req.params.file;
+    const { ref } = req.query;
+    const { projectId } = serverOptions;
+    const authorization = req.get("Authorization");
+
+    if (serverOptions.before) {
+      await serverOptions.before({
+        path: file,
+        ref,
+      });
+    }
+
+    if (
+      !authorization ||
+      !(await serverOptions.auth.authCheck(authorization))
+    ) {
+      throw Boom.unauthorized();
+    }
+
+    const stream = await serverOptions.backend.readFileRaw({
+      file,
+      projectId,
+      ref,
+    });
+
+    stream.pipe(res);
+  });
+
+const headFile = (serverOptions: IServerOptions) =>
+  asyncHandler(async (req, res, next) => {
+    const file = req.params["0"];
+    const { ref } = req.query;
+    const { projectId } = serverOptions;
+    const authorization = req.get("Authorization");
+
+    if (serverOptions.before) {
+      await serverOptions.before({
+        path: file,
+        ref,
+      });
+    }
+
+    if (
+      !authorization ||
+      !(await serverOptions.auth.authCheck(authorization))
+    ) {
+      throw Boom.unauthorized();
+    }
+
+    const { headers } = await serverOptions.backend.headFile({
+      file,
+      projectId,
+      ref,
+    });
+
+    res.set(headers);
+    res.end();
   });
 
 const commit = (serverOptions: IServerOptions) =>

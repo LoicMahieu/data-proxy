@@ -13,7 +13,6 @@ import {
   SimpleForm,
   TextInput,
   BooleanInput,
-  ListGuesser,
   DateField,
   CardActions,
   CREATE,
@@ -22,7 +21,6 @@ import { refreshView as refreshViewAction } from "ra-core";
 import { connect } from "react-redux";
 import { createAuthProvider } from "@data-proxy/react-admin-provider";
 import Button from "@material-ui/core/Button";
-import LoginPage from "./LoginPage";
 import { dataProvider } from "./dataProvider";
 import { CircularProgress } from "@material-ui/core";
 import { CheckCircle, HighlightOff } from "@material-ui/icons";
@@ -58,6 +56,36 @@ const UserCreate = props => (
     <SimpleForm>
       <BooleanInput source="active" />
       <TextInput source="name" />
+    </SimpleForm>
+  </Create>
+);
+
+const ArticleList = props => (
+  <List {...props}>
+    <Datagrid rowClick="edit">
+      {/* <TextField source="id" /> */}
+      <BooleanField source="active" />
+      <TextField source="title" />
+      <EditButton />
+      <DeleteButton />
+    </Datagrid>
+  </List>
+);
+
+const ArticleEdit = props => (
+  <Edit {...props}>
+    <SimpleForm>
+      <BooleanInput source="active" />
+      <TextInput source="title" />
+    </SimpleForm>
+  </Edit>
+);
+
+const ArticleCreate = props => (
+  <Create {...props}>
+    <SimpleForm>
+      <BooleanInput source="active" />
+      <TextInput source="title" />
     </SimpleForm>
   </Create>
 );
@@ -129,14 +157,21 @@ export const PipelineList = props => (
 const App = () => (
   <Admin
     dataProvider={dataProvider}
-    authProvider={authProvider}
-    loginPage={LoginPage}
+    authProvider={(type, { username, password } = {}) =>
+      authProvider(type, { login: username, password })
+    }
   >
     <Resource
       name="users"
       list={UserList}
       edit={UserEdit}
       create={UserCreate}
+    />
+    <Resource
+      name="articles"
+      list={ArticleList}
+      edit={ArticleEdit}
+      create={ArticleCreate}
     />
     <Resource name="pipelines" list={PipelineList} />
   </Admin>

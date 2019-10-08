@@ -1,8 +1,10 @@
 import {
   createDataProvider,
   GitlabProviderFileList,
+  GitlabProviderFile,
   GitlabProviderPipeline,
-} from "@data-proxy/react-admin-provider";
+} from "@react-admin-git-provider/gitlab";
+import { LocalforageCacheProvider } from "@react-admin-git-provider/common";
 
 const baseProviderOptions = {
   projectId: process.env.GITLAB_PROJECT_ID,
@@ -17,9 +19,17 @@ export const getProviderForResource = resource =>
     ? new GitlabProviderPipeline({
         ...baseProviderOptions,
       })
+    : resource === "articles"
+    ? new GitlabProviderFile({
+        ...baseProviderOptions,
+        path: `${process.env.GITLAB_DATA_BASE_PATH}/${resource}.json`,
+        cacheBehavior: "contentSha",
+        cacheProvider: new LocalforageCacheProvider({ storeName: "react-admin-gitlab" }),
+      })
     : new GitlabProviderFileList({
         ...baseProviderOptions,
-        basePath: `${process.env.GITLAB_DATA_BASE_PATH}/${resource}`,
+        path: `${process.env.GITLAB_DATA_BASE_PATH}/${resource}`,
+        cacheProvider: new LocalforageCacheProvider({ storeName: "react-admin-gitlab" }),
       });
 
 export const dataProvider = createDataProvider(({ resource }) =>

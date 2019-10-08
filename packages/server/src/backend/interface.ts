@@ -1,4 +1,5 @@
 import { OutgoingHttpHeaders } from "http";
+import { Readable } from "stream";
 import { ICommitBody } from "../types";
 
 export interface IBackendBaseOptions {
@@ -41,6 +42,12 @@ export interface IBackend {
   readFile(
     options: IBackendReadFileOptions,
   ): Promise<{ headers: OutgoingHttpHeaders; body: IBackendFile }>;
+  readFileRaw(
+    options: IBackendReadFileOptions,
+  ): Promise<Readable>;
+  headFile(
+    options: IBackendReadFileOptions,
+  ): Promise<{ headers: OutgoingHttpHeaders; }>;
   commit(
     options: IBackendCommitOptions,
   ): Promise<{ headers: OutgoingHttpHeaders; body: any }>;

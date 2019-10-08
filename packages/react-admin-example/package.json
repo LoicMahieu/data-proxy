@@ -3,7 +3,8 @@
   "version": "0.3.1",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "start:server": "ts-node-dev scripts/test-server.ts"
   },
   "dependencies": {
     "@babel/core": "^7.6.2",
@@ -13,6 +14,7 @@
     "@data-proxy/server": "^0.3.1",
     "@material-ui/core": "^4",
     "@material-ui/icons": "^4",
+    "@react-admin-git-provider/gitlab": "^0.6.0",
     "babel-loader": "^8.0.6",
     "babel-polyfill": "^6.26.0",
     "html-webpack-plugin": "^3.2.0",
@@ -24,6 +26,12 @@
     "webpack-dev-server": "^3.8.2"
   },
   "devDependencies": {
-    "babel-plugin-transform-class-properties": "^6.24.1"
+    "@data-proxy/server-auth-omnipartners": "0.4.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "morgan": "^1.9.1",
+    "omnipartners": "^2.3.12",
+    "ts-node-dev": "^1.0.0-pre.43"
   }
 }

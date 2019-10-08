@@ -1,4 +1,4 @@
-import bodyParser from "body-parser";
+import bodyParser, { OptionsJson } from "body-parser";
 import Boom from "boom";
 import { Application, ErrorRequestHandler } from "express";
 import asyncHandler from "express-async-handler";
@@ -10,10 +10,13 @@ export async function applyMiddlewares(
 ) {
   const prefix = serverOptions.prefix || "";
   const projectId = encodeURIComponent(serverOptions.projectId);
+  const bodyParserOptions: OptionsJson = serverOptions.bodyParserOptions || {
+    limit: "50mb",
+  };
 
   app.post(
     `${prefix}/__data-proxy__/${projectId}/authenticate`,
-    bodyParser.json(),
+    bodyParser.json(bodyParserOptions),
     authenticate(serverOptions),
   );
 
@@ -35,12 +38,12 @@ export async function applyMiddlewares(
   );
   app.post(
     `${prefix}/api/v4/projects/${projectId}/repository/commits`,
-    bodyParser.json(),
+    bodyParser.json(bodyParserOptions),
     commit(serverOptions),
   );
   app.get(
     `${prefix}/api/v4/projects/${projectId}/repository/branches/:ref`,
-    bodyParser.json(),
+    bodyParser.json(bodyParserOptions),
     branch(serverOptions),
   );
 

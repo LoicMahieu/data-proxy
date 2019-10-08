@@ -1,3 +1,4 @@
+import { OptionsJson } from "body-parser";
 import { IAuthBackend, IAuthTokenData } from "./auth/base";
 import { IBackend } from "./backend/interface";
 
@@ -13,6 +14,7 @@ export interface IServerOptions {
   before?: (data: IBeforeData) => Promise<void>;
   beforeCommit?: (data: ICommitBody, authData: IAuthTokenData) => Promise<void | ICommitBody>;
   prefix?: string;
+  bodyParserOptions?: OptionsJson
 }
 
 export interface ICommitAction {

@@ -19,6 +19,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
+    "@data-proxy/server-auth-omnipartners": "^0.5.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "boom": "^7.3.0",
@@ -48,6 +49,7 @@
     "@types/morgan": "^1.7.37",
     "@types/uuid": "^3.4.5",
     "nodemon": "^1.19.3",
+    "omnipartners": "^2.3.12",
     "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
     "typescript": "^3.6.3"

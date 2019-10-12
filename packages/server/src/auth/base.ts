@@ -47,8 +47,6 @@ const createAuthCheck = (options: IAuthBaseOptions) => async (
     ) {
       throw err;
     }
-
-    throw Boom.badRequest(err.message);
   }
 
   if (

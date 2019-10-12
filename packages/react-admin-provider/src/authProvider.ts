@@ -1,4 +1,7 @@
-import { AbstractAuthBridge, LocalStorageAuthBridge } from "@react-admin-git-provider/common";
+import {
+  AbstractAuthBridge,
+  LocalStorageAuthBridge,
+} from "@react-admin-git-provider/common";
 
 export interface IAuthOptions {
   host: string;
@@ -6,7 +9,11 @@ export interface IAuthOptions {
   authBridge?: AbstractAuthBridge;
 }
 
-export const createAuthProvider = ({ host, projectId, authBridge = new LocalStorageAuthBridge() }: IAuthOptions) => async (
+export const createAuthProvider = ({
+  host,
+  projectId,
+  authBridge = new LocalStorageAuthBridge(),
+}: IAuthOptions) => async (
   type: string,
   params: { login: string; password: string },
 ) => {
@@ -14,9 +21,7 @@ export const createAuthProvider = ({ host, projectId, authBridge = new LocalStor
     if (type === "AUTH_LOGIN") {
       const { login, password } = params;
       const res = await fetch(
-        `${host}/__data-proxy__/${encodeURIComponent(
-          projectId,
-        )}/authenticate`,
+        `${host}/__data-proxy__/${encodeURIComponent(projectId)}/authenticate`,
         {
           body: JSON.stringify({ login, password }),
           headers: {
@@ -40,11 +45,26 @@ export const createAuthProvider = ({ host, projectId, authBridge = new LocalStor
       return Promise.resolve();
     }
     if (type === "AUTH_CHECK") {
+      const res = await fetch(
+        `${host}/__data-proxy__/${encodeURIComponent(
+          projectId,
+        )}/authenticate-check`,
+        {
+          headers: {
+            Authorization: "Bearer " + authBridge.getToken(),
+            "Content-Type": "application/json",
+          },
+          method: "head",
+        },
+      );
+      if (res.status < 200 || res.status >= 300) {
+        throw new Error(res.statusText);
+      }
       return authBridge.getToken() ? Promise.resolve() : Promise.reject();
     }
     return Promise.reject("Unknown method");
   } catch (err) {
     console.error(err);
-    return Promise.reject(err.message)
+    return Promise.reject(err.message);
   }
 };

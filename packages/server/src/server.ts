@@ -14,6 +14,10 @@ export async function applyMiddlewares(
     limit: "50mb",
   };
 
+  app.head(
+    `${prefix}/__data-proxy__/${projectId}/authenticate-check`,
+    authenticateCheck(serverOptions),
+  );
   app.post(
     `${prefix}/__data-proxy__/${projectId}/authenticate`,
     bodyParser.json(bodyParserOptions),
@@ -89,6 +93,28 @@ const authenticate = (serverOptions: IServerOptions) =>
     }
 
     res.send({ token });
+  });
+
+const authenticateCheck = (serverOptions: IServerOptions) =>
+  asyncHandler(async (req, res, next) => {
+    if (serverOptions.before) {
+      await serverOptions.before({});
+    }
+
+    const authorization = req.get("Authorization");
+
+    if (serverOptions.before) {
+      await serverOptions.before({});
+    }
+
+    if (
+      !authorization ||
+      !(await serverOptions.auth.authCheck(authorization))
+    ) {
+      throw Boom.unauthorized();
+    }
+
+    res.send();
   });
 
 const tree = (serverOptions: IServerOptions) =>

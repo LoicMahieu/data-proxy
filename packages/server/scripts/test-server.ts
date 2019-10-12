@@ -12,6 +12,7 @@ import {
 
 import { authOmnipartners, verifyUserFromFileList } from "@data-proxy/server-auth-omnipartners";
 import omnipartners from "omnipartners";
+import { join } from "path";
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use(cors());
 // });
 
 const backend = backendFilesystem({
-  cwd: "/Users/loicmahieu/Projects/test-react-admin"
+  cwd: join(__dirname, '../../react-admin-example')
 });
 
 // const auth = authBackendFileList({
@@ -40,12 +41,12 @@ const backend = backendFilesystem({
 const auth = authOmnipartners({
   jwtSecret: "foobar",
   omnipartners: omnipartners(JSON.parse(process.env.OMNIPARTNERS_CONFIG || "")),
-  verifyUser: verifyUserFromFileList({
-    backend,
-    path: "data/users",
-    projectId: "LoicMahieu/test-react-admin",
-    ref: "master",
-  })
+  // verifyUser: verifyUserFromFileList({
+  //   backend,
+  //   path: "data/users",
+  //   projectId: "LoicMahieu/test-react-admin",
+  //   ref: "master",
+  // })
 });
 
 applyMiddlewares(app, {

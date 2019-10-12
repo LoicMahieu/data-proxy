@@ -12,7 +12,7 @@
     "access": "public"
   },
   "scripts": {
-    "start": "nodemon -r ts-node/register scripts/test-server.ts",
+    "start": "ts-node-dev scripts/test-server.ts",
     "test": "npm run build",
     "build": "rm -rf lib/* && tsc",
     "watch": "yarn build && tsc -w",
@@ -48,9 +48,9 @@
     "@types/micromatch": "^3.1.0",
     "@types/morgan": "^1.7.37",
     "@types/uuid": "^3.4.5",
-    "nodemon": "^1.19.3",
     "omnipartners": "^2.3.12",
     "ts-node": "^8.4.1",
+    "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^5.20.0",
     "typescript": "^3.6.3"
   }

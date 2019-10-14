@@ -22,10 +22,10 @@
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.2",
-    "omnipartners": "^2.3.12",
+    "omnipartners": "^2.4.0",
     "winston": "^3.2.1"
   },
   "peerDependencies": {
-    "omnipartners": "^2.3.12"
+    "omnipartners": "^2.4.0"
   }
 }

@@ -23,7 +23,7 @@ export const authOmnipartners = ({
     ...options,
     check: async login => true,
     verifyPassword: async (login, password) => {
-      let data: IUser | void
+      let data: IUser | void;
 
       try {
         data = await omnipartners.identity.authenticate({
@@ -32,19 +32,27 @@ export const authOmnipartners = ({
           password,
         });
       } catch (err) {
-        if (err.code !== "OP/OPStatusError/3" && err.code !== "OP/OPStatusError/4" && err.code !== "OP/OPStatusError/5") {
-          throw err
+        if (
+          err.code !== "OP/OPStatusError/3" &&
+          err.code !== "OP/OPStatusError/4" &&
+          err.code !== "OP/OPStatusError/5"
+        ) {
+          throw err;
         }
 
-        return false
+        return false;
       }
 
-      if (typeof verifyUser === "function" && !await verifyUser(data)) {
+      const verifyData =
+        typeof verifyUser === "function" ? await verifyUser(data) : {};
+
+      if (!verifyData) {
         return false;
       }
 
       return {
-        user: data
+        user: data,
+        verifyData,
       };
     },
   });

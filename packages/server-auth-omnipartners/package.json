@@ -1,6 +1,6 @@
 {
   "name": "@data-proxy/server-auth-omnipartners",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "files": [
     "lib/*"
   ],
@@ -18,7 +18,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@data-proxy/server": "^0.5.0"
+    "@data-proxy/server": "^0.6.0"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.3",

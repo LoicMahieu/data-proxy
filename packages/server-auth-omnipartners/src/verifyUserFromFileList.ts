@@ -12,5 +12,5 @@ export const verifyUserFromFileList = ({
   const entities = await loadFileList(options);
   const guid = user.owner.guid;
   const entity = entities.find(e => e[guidField] === guid);
-  return !!entity;
+  return entity;
 };

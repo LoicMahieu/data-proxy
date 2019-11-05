@@ -62,6 +62,24 @@ export const createAuthProvider = ({
       }
       return authBridge.getToken() ? Promise.resolve() : Promise.reject();
     }
+
+    if (type === "AUTH_GET_PERMISSIONS") {
+      const res = await fetch(
+        `${host}/__data-proxy__/${encodeURIComponent(projectId)}/permissions`,
+        {
+          headers: {
+            Authorization: "Bearer " + authBridge.getToken(),
+            "Content-Type": "application/json",
+          },
+          method: "get",
+        },
+      );
+      if (res.status < 200 || res.status >= 300) {
+        throw new Error(res.statusText);
+      }
+
+      return res.json();
+    }
     return Promise.reject("Unknown method");
   } catch (err) {
     console.error(err);

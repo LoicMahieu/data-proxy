@@ -161,19 +161,25 @@ const App = () => (
       authProvider(type, { login: username, password })
     }
   >
-    <Resource
-      name="users"
-      list={UserList}
-      edit={UserEdit}
-      create={UserCreate}
-    />
-    <Resource
-      name="articles"
-      list={ArticleList}
-      edit={ArticleEdit}
-      create={ArticleCreate}
-    />
-    <Resource name="pipelines" list={PipelineList} />
+    {permissions => {
+      return [
+        <Resource
+          name="users"
+          list={UserList}
+          edit={UserEdit}
+          create={UserCreate}
+        />,
+        permissions.includes("admin") ? (
+          <Resource
+            name="articles"
+            list={ArticleList}
+            edit={ArticleEdit}
+            create={ArticleCreate}
+          />
+        ) : null,
+        <Resource name="pipelines" list={PipelineList} />,
+      ];
+    }}
   </Admin>
 );
 

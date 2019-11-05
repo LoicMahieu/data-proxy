@@ -23,6 +23,10 @@ export async function applyMiddlewares(
     bodyParser.json(bodyParserOptions),
     authenticate(serverOptions),
   );
+  app.get(
+    `${prefix}/__data-proxy__/${projectId}/permissions`,
+    getPermissions(serverOptions),
+  );
 
   app.get(
     `${prefix}/api/v4/projects/${projectId}/repository/tree`,
@@ -395,4 +399,25 @@ const branch = (serverOptions: IServerOptions) =>
 
     res.set(headers);
     res.send(body);
+  });
+
+const getPermissions = (serverOptions: IServerOptions) =>
+  asyncHandler(async (req, res, next) => {
+    const authorization = req.get("Authorization");
+    if (serverOptions.before) {
+      await serverOptions.before({});
+    }
+
+    const tokenData =
+      authorization && (await serverOptions.auth.authCheck(authorization));
+
+    if (!tokenData) {
+      throw Boom.unauthorized();
+    }
+
+    const permissions = serverOptions.getPermissions
+      ? await serverOptions.getPermissions(tokenData)
+      : [];
+
+    res.send(permissions);
   });

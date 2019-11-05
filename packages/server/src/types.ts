@@ -12,9 +12,15 @@ export interface IServerOptions {
   auth: IAuthBackend;
   backend: IBackend;
   before?: (data: IBeforeData) => Promise<void>;
-  beforeCommit?: (data: ICommitBody, authData: IAuthTokenData) => Promise<void | ICommitBody>;
+  beforeCommit?: (
+    data: ICommitBody,
+    authData: IAuthTokenData,
+  ) => Promise<void | ICommitBody>;
   prefix?: string;
-  bodyParserOptions?: OptionsJson
+  bodyParserOptions?: OptionsJson;
+  getPermissions?: (
+    authData: IAuthTokenData,
+  ) => string | string[] | Promise<string | string[]>;
 }
 
 export interface ICommitAction {

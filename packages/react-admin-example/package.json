@@ -7,23 +7,23 @@
     "start:server": "ts-node-dev scripts/test-server.ts"
   },
   "dependencies": {
-    "@babel/core": "^7.6.4",
-    "@babel/preset-env": "^7.6.3",
-    "@babel/preset-react": "^7.6.3",
+    "@babel/core": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
     "@data-proxy/react-admin-provider": "^0.7.0",
     "@data-proxy/server": "^0.5.0",
     "@material-ui/core": "^4",
     "@material-ui/icons": "^4",
-    "@react-admin-git-provider/gitlab": "^0.7.0",
+    "@react-admin-git-provider/gitlab": "^0.7.1",
     "babel-loader": "^8.0.6",
     "babel-polyfill": "^6.26.0",
     "html-webpack-plugin": "^3.2.0",
-    "react": "^16.10.2",
-    "react-admin": "^2.9.7",
-    "react-dom": "^16.10.2",
-    "webpack": "^4.41.1",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.2"
+    "react": "^16.11.0",
+    "react-admin": "^2.9.8",
+    "react-dom": "^16.11.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
   },
   "devDependencies": {
     "@data-proxy/server-auth-omnipartners": "^0.6.0",
@@ -31,7 +31,7 @@
     "express": "^4.17.1",
     "lodash": "^4.17.15",
     "morgan": "^1.9.1",
-    "omnipartners": "^2.4.0",
+    "omnipartners": "^2.11.0",
     "ts-node-dev": "^1.0.0-pre.43"
   }
 }

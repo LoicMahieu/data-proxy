@@ -35,7 +35,8 @@ export const authOmnipartners = ({
         if (
           err.code !== "OP/OPStatusError/3" &&
           err.code !== "OP/OPStatusError/4" &&
-          err.code !== "OP/OPStatusError/5"
+          err.code !== "OP/OPStatusError/5" &&
+          err.code !== "OP/OPStatusError/28" // Password does not meet the required specifications.
         ) {
           throw err;
         }

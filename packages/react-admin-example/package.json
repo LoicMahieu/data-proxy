@@ -1,6 +1,6 @@
 {
   "name": "@data-proxy/react-admin-example",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server",
@@ -26,7 +26,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "devDependencies": {
-    "@data-proxy/server-auth-omnipartners": "^0.7.0",
+    "@data-proxy/server-auth-omnipartners": "^0.7.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "express": "^4.17.1",
     "lodash": "^4.17.15",

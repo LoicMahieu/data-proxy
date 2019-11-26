@@ -67,7 +67,7 @@ export const createAuthProvider = ({
         },
       );
       if (res.status < 200 || res.status >= 300) {
-        throw new Error(res.statusText);
+        return Promise.reject();
       }
       return authBridge.getToken() ? Promise.resolve() : Promise.reject();
     }

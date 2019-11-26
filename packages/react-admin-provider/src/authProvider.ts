@@ -42,9 +42,13 @@ export const createAuthProvider = ({
       if (res.status < 200 || res.status >= 300) {
         throw new Error((json && json.message) || res.statusText);
       }
-      const { token } = await res.json();
-      authBridge.setToken(token);
-      return Promise.resolve();
+      if (json && json.token) {
+        const { token } = await res.json();
+        authBridge.setToken(token);
+        return Promise.resolve();
+      } else {
+        return Promise.reject();
+      }
     }
     if (type === "AUTH_LOGOUT") {
       authBridge.removeToken();

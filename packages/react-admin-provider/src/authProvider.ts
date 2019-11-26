@@ -43,8 +43,7 @@ export const createAuthProvider = ({
         throw new Error((json && json.message) || res.statusText);
       }
       if (json && json.token) {
-        const { token } = await res.json();
-        authBridge.setToken(token);
+        authBridge.setToken(json.token);
         return Promise.resolve();
       } else {
         return Promise.reject();

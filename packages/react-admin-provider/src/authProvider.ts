@@ -9,6 +9,14 @@ export interface IAuthOptions {
   authBridge?: AbstractAuthBridge;
 }
 
+const pTry = async <T = any>(fn: () => Promise<T>): Promise<T | undefined> => {
+  try {
+    return await fn();
+  } catch (err) {
+    return;
+  }
+};
+
 export const createAuthProvider = ({
   host,
   projectId,
@@ -30,8 +38,9 @@ export const createAuthProvider = ({
           method: "post",
         },
       );
+      const json = await pTry(() => res.json());
       if (res.status < 200 || res.status >= 300) {
-        throw new Error(res.statusText);
+        throw new Error((json && json.message) || res.statusText);
       }
       const { token } = await res.json();
       authBridge.setToken(token);

@@ -21,11 +21,11 @@
     "@data-proxy/server": "^0.6.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.3",
-    "omnipartners": "^2.11.0",
+    "@types/node-fetch": "^2.5.4",
+    "omnipartners": "^2.20.0",
     "winston": "^3.2.1"
   },
   "peerDependencies": {
-    "omnipartners": "^2.11.0"
+    "omnipartners": "^2.20.0"
   }
 }

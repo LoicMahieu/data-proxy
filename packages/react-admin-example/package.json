@@ -7,20 +7,20 @@
     "start:server": "ts-node-dev scripts/test-server.ts"
   },
   "dependencies": {
-    "@babel/core": "^7.7.0",
-    "@babel/preset-env": "^7.7.1",
-    "@babel/preset-react": "^7.7.0",
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
     "@data-proxy/react-admin-provider": "^0.8.3",
     "@data-proxy/server": "^0.6.0",
     "@material-ui/core": "^4",
     "@material-ui/icons": "^4",
-    "@react-admin-git-provider/gitlab": "^0.7.1",
+    "@react-admin-git-provider/gitlab": "^0.8.0",
     "babel-loader": "^8.0.6",
     "babel-polyfill": "^6.26.0",
     "html-webpack-plugin": "^3.2.0",
-    "react": "^16.11.0",
-    "react-admin": "^2.9.8",
-    "react-dom": "^16.11.0",
+    "react": "^16.12.0",
+    "react-admin": "^3.0.2",
+    "react-dom": "^16.12.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
@@ -31,7 +31,7 @@
     "express": "^4.17.1",
     "lodash": "^4.17.15",
     "morgan": "^1.9.1",
-    "omnipartners": "^2.11.0",
+    "omnipartners": "^2.20.0",
     "ts-node-dev": "^1.0.0-pre.43"
   }
 }

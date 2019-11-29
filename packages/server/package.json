@@ -32,7 +32,7 @@
     "lodash": "^4.17.15",
     "micromatch": "^4.0.2",
     "morgan": "^1.9.1",
-    "picomatch": "^2.1.0",
+    "picomatch": "^2.1.1",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
@@ -41,16 +41,16 @@
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.2",
     "@types/fs-extra": "^8.0.1",
-    "@types/got": "^9.6.8",
+    "@types/got": "^9.6.9",
     "@types/jsonwebtoken": "^8.3.5",
-    "@types/lodash": "^4.14.144",
-    "@types/micromatch": "^3.1.0",
+    "@types/lodash": "^4.14.149",
+    "@types/micromatch": "^3.1.1",
     "@types/morgan": "^1.7.37",
     "@types/uuid": "^3.4.6",
-    "omnipartners": "^2.11.0",
-    "ts-node": "^8.4.1",
+    "omnipartners": "^2.20.0",
+    "ts-node": "^8.5.4",
     "ts-node-dev": "^1.0.0-pre.43",
-    "tslint": "^5.20.0",
+    "tslint": "^5.20.1",
     "typescript": "^3.7.2"
   }
 }

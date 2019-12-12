@@ -16,6 +16,6 @@
     "lerna": "^3.19.0",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.3"
   }
 }

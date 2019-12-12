@@ -49,11 +49,11 @@
     "@types/micromatch": "^3.1.1",
     "@types/morgan": "^1.7.37",
     "@types/uuid": "^3.4.6",
-    "omnipartners": "^2.20.0",
+    "omnipartners": "^2.21.0",
     "ts-node": "^8.5.4",
     "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^5.20.1",
     "tsdx": "^0.11.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.3"
   }
 }

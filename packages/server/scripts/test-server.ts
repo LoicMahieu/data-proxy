@@ -10,7 +10,11 @@ import {
   beforeCheckPermissions,
 } from "../src";
 
-import { authOmnipartners, verifyUserFromFileList } from "@data-proxy/server-auth-omnipartners";
+import {
+  authOmnipartners,
+  verifyUserFromFileList,
+  // tslint:disable-next-line
+} from "@data-proxy/server-auth-omnipartners";
 import omnipartners from "omnipartners";
 import { join } from "path";
 
@@ -24,7 +28,7 @@ app.use(cors());
 // });
 
 const backend = backendFilesystem({
-  cwd: join(__dirname, '../../react-admin-example')
+  cwd: join(__dirname, "../../react-admin-example"),
 });
 
 // const auth = authBackendFileList({
@@ -59,3 +63,5 @@ applyMiddlewares(app, {
 });
 
 app.listen(3001);
+
+console.log("Server listen http://localhost:3001");

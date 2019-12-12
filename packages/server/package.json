@@ -2,20 +2,21 @@
   "name": "@data-proxy/server",
   "version": "0.7.0",
   "files": [
-    "lib/*"
+    "dist"
   ],
-  "main": "./lib/index.js",
-  "typings": "./lib/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/server.esm.js",
+  "typings": "dist/index.d.ts",
   "author": "Loïc Mahieu <mahieuloic@gmail.com>",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "start": "ts-node-dev scripts/test-server.ts",
+    "start": "ts-node-dev --project tsconfig.dev.json scripts/test-server.ts",
     "test": "npm run build",
-    "build": "rm -rf lib/* && tsc",
-    "watch": "yarn build && tsc -w",
+    "build": "tsdx build",
+    "watch": "tsdx watch",
     "prepare": "yarn build"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "hasha": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
+    "lodash-es": "^4.17.15",
     "micromatch": "^4.0.2",
     "morgan": "^1.9.1",
     "picomatch": "^2.1.1",
@@ -51,6 +53,7 @@
     "ts-node": "^8.5.4",
     "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^5.20.1",
+    "tsdx": "^0.11.0",
     "typescript": "^3.7.2"
   }
 }

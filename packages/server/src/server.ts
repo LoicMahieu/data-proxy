@@ -85,7 +85,7 @@ export async function applyMiddlewares(
 }
 
 const authenticate = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     if (serverOptions.before) {
       await serverOptions.before({});
     }
@@ -100,7 +100,7 @@ const authenticate = (serverOptions: IServerOptions) =>
   });
 
 const authenticateCheck = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     if (serverOptions.before) {
       await serverOptions.before({});
     }
@@ -122,7 +122,7 @@ const authenticateCheck = (serverOptions: IServerOptions) =>
   });
 
 const tree = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const { path, page, ref } = req.query;
     const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
@@ -153,7 +153,7 @@ const tree = (serverOptions: IServerOptions) =>
   });
 
 const readFile = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const file = req.params["0"];
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -184,7 +184,7 @@ const readFile = (serverOptions: IServerOptions) =>
   });
 
 const readFileRaw = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const file = req.params.file;
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -214,7 +214,7 @@ const readFileRaw = (serverOptions: IServerOptions) =>
   });
 
 const headFile = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const file = req.params["0"];
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -245,7 +245,7 @@ const headFile = (serverOptions: IServerOptions) =>
   });
 
 const commit = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const commitBody: ICommitBody = req.body;
     const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
@@ -294,7 +294,7 @@ const commit = (serverOptions: IServerOptions) =>
   });
 
 const listPipelines = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const authorization = req.get("Authorization");
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -322,7 +322,7 @@ const listPipelines = (serverOptions: IServerOptions) =>
   });
 
 const triggerPipeline = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const authorization = req.get("Authorization");
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -350,7 +350,7 @@ const triggerPipeline = (serverOptions: IServerOptions) =>
   });
 
 const getPipeline = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const authorization = req.get("Authorization");
     const { id } = req.params;
     const { projectId } = serverOptions;
@@ -376,7 +376,7 @@ const getPipeline = (serverOptions: IServerOptions) =>
   });
 
 const branch = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const authorization = req.get("Authorization");
     const { ref } = req.params;
     const { projectId } = serverOptions;
@@ -402,7 +402,7 @@ const branch = (serverOptions: IServerOptions) =>
   });
 
 const getPermissions = (serverOptions: IServerOptions) =>
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const authorization = req.get("Authorization");
     if (serverOptions.before) {
       await serverOptions.before({});

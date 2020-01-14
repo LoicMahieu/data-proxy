@@ -26,8 +26,6 @@ const basePickHeaders = [
   "x-total-pages",
 ];
 
-const paginationPickHeaders = [];
-
 const defaultGitlabOptions: Omit<IBackendGitlabOptions, "privateToken"> = {
   host: "https://gitlab.com",
   timeout: 30000,

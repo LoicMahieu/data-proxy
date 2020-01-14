@@ -1,4 +1,3 @@
-import Boom from "boom";
 import jwt, { SignOptions } from "jsonwebtoken";
 
 export interface IAuthBaseOptions {

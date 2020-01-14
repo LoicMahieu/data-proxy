@@ -1,10 +1,10 @@
-import { authBase, IAuthBackend, IAuthBaseOptions } from "@data-proxy/server";
+import { authBase, IAuthBackend, IAuthBaseOptions, IAuthTokenData } from "@data-proxy/server";
 import { IUser, IUserDataOptions, Omnipartners } from "omnipartners";
 
 export interface IAuthBaseMapOptions
   extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {
   omnipartners: Omnipartners;
-  verifyUser?: (user: IUser) => Promise<boolean>;
+  verifyUser?: (user: IUser) => false | Omit<IAuthTokenData, "login">;
 }
 
 export const dataOptions: IUserDataOptions = [

@@ -9,7 +9,8 @@
     "no-console": false,
     "no-submodule-imports": false,
     "no-implicit-dependencies": [true, "dev"],
-    "max-classes-per-file": false
+    "max-classes-per-file": false,
+    "no-floating-promises": true
   },
   "rulesDirectory": []
 }

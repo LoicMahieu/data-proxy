@@ -4,7 +4,7 @@ import { Application, ErrorRequestHandler } from "express";
 import asyncHandler from "express-async-handler";
 import { ICommitBody, IServerOptions } from "./types";
 
-export async function applyMiddlewares(
+export function applyMiddlewares(
   app: Application,
   serverOptions: IServerOptions,
 ) {

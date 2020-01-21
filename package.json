@@ -5,6 +5,7 @@
   "author": "Loïc Mahieu <mahieuloic@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "test": "yarn lint && lerna run --stream --concurrency 1 test",
     "lint": "tslint -p .",
     "build": "lerna run --stream build",
     "start": "lerna run --stream --no-sort start"

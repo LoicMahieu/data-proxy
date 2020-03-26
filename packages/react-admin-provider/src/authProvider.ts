@@ -57,6 +57,10 @@ export const createAuthProvider = ({
       return Promise.resolve();
     }
     if (type === "AUTH_CHECK") {
+      const token = authBridge.getToken();
+      if (!token) {
+        return Promise.reject();
+      }
       const res = await fetch(
         `${host}/__data-proxy__/${encodeURIComponent(
           projectId,

@@ -118,7 +118,7 @@ const authenticateCheck = (serverOptions: IServerOptions) =>
       throw Boom.unauthorized();
     }
 
-    res.send();
+    res.send("");
   });
 
 const tree = (serverOptions: IServerOptions) =>

@@ -99,6 +99,6 @@ export const createAuthProvider = ({
     return Promise.reject("Unknown method");
   } catch (err) {
     console.error(err);
-    return Promise.reject(err.message);
+    return Promise.reject(err && err.message);
   }
 };

@@ -1,4 +1,5 @@
 import { OptionsJson } from "body-parser";
+import { IncomingMessage } from "http";
 import { IAuthBackend, IAuthTokenData } from "./auth/base";
 import { IBackend } from "./backend/interface";
 
@@ -9,8 +10,8 @@ export interface IBeforeData {
 
 export interface IServerOptions {
   projectId: string;
-  auth: IAuthBackend;
-  backend: IBackend;
+  auth: IAuthBackend | ((req: IncomingMessage) => IAuthBackend);
+  backend: IBackend | ((req: IncomingMessage) => IBackend);
   before?: (data: IBeforeData) => Promise<void>;
   beforeCommit?: (
     data: ICommitBody,
@@ -22,6 +23,15 @@ export interface IServerOptions {
     authData: IAuthTokenData,
   ) => string | string[] | Promise<string | string[]>;
 }
+
+export type IServerOptionsForRequest = (
+  req: IncomingMessage,
+) => Promise<
+  IServerOptions & {
+    auth: IAuthBackend;
+    backend: IBackend;
+  }
+>;
 
 export interface ICommitAction {
   action: "create" | "delete" | "move" | "update";

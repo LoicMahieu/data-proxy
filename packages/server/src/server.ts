@@ -2,7 +2,23 @@ import bodyParser, { OptionsJson } from "body-parser";
 import Boom from "boom";
 import { Application, ErrorRequestHandler } from "express";
 import asyncHandler from "express-async-handler";
-import { ICommitBody, IServerOptions } from "./types";
+import { ICommitBody, IServerOptions, IServerOptionsForRequest } from "./types";
+
+const makeOptionsForRequest: (
+  serverOptions: IServerOptions,
+) => IServerOptionsForRequest = serverOptions => async req => {
+  return {
+    ...serverOptions,
+    auth:
+      typeof serverOptions.auth === "function"
+        ? serverOptions.auth(req)
+        : serverOptions.auth,
+    backend:
+      typeof serverOptions.backend === "function"
+        ? serverOptions.backend(req)
+        : serverOptions.backend,
+  };
+};
 
 export function applyMiddlewares(
   app: Application,
@@ -14,58 +30,60 @@ export function applyMiddlewares(
     limit: "50mb",
   };
 
+  const serverOptionsForRequest = makeOptionsForRequest(serverOptions);
+
   app.head(
     `${prefix}/__data-proxy__/${projectId}/authenticate-check`,
-    authenticateCheck(serverOptions),
+    authenticateCheck(serverOptionsForRequest),
   );
   app.post(
     `${prefix}/__data-proxy__/${projectId}/authenticate`,
     bodyParser.json(bodyParserOptions),
-    authenticate(serverOptions),
+    authenticate(serverOptionsForRequest),
   );
   app.get(
     `${prefix}/__data-proxy__/${projectId}/permissions`,
-    getPermissions(serverOptions),
+    getPermissions(serverOptionsForRequest),
   );
 
   app.get(
     `${prefix}/api/v4/projects/${projectId}/repository/tree`,
-    tree(serverOptions),
+    tree(serverOptionsForRequest),
   );
   app.get(
     `${prefix}/api/v4/projects/${projectId}/repository/files/:file/raw`,
-    readFileRaw(serverOptions),
+    readFileRaw(serverOptionsForRequest),
   );
   app.get(
     `${prefix}/api/v4/projects/${projectId}/repository/files/*`,
-    readFile(serverOptions),
+    readFile(serverOptionsForRequest),
   );
   app.head(
     `${prefix}/api/v4/projects/${projectId}/repository/files/*`,
-    headFile(serverOptions),
+    headFile(serverOptionsForRequest),
   );
   app.post(
     `${prefix}/api/v4/projects/${projectId}/repository/commits`,
     bodyParser.json(bodyParserOptions),
-    commit(serverOptions),
+    commit(serverOptionsForRequest),
   );
   app.get(
     `${prefix}/api/v4/projects/${projectId}/repository/branches/:ref`,
     bodyParser.json(bodyParserOptions),
-    branch(serverOptions),
+    branch(serverOptionsForRequest),
   );
 
   app.get(
     `${prefix}/api/v4/projects/${projectId}/pipelines`,
-    listPipelines(serverOptions),
+    listPipelines(serverOptionsForRequest),
   );
   app.get(
     `${prefix}/api/v4/projects/${projectId}/pipelines/:id`,
-    getPipeline(serverOptions),
+    getPipeline(serverOptionsForRequest),
   );
   app.post(
     `${prefix}/api/v4/projects/${projectId}/pipeline`,
-    triggerPipeline(serverOptions),
+    triggerPipeline(serverOptionsForRequest),
   );
 
   const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
@@ -84,8 +102,10 @@ export function applyMiddlewares(
   app.use(errorHandler);
 }
 
-const authenticate = (serverOptions: IServerOptions) =>
+const authenticate = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
+
     if (serverOptions.before) {
       await serverOptions.before({});
     }
@@ -99,8 +119,10 @@ const authenticate = (serverOptions: IServerOptions) =>
     res.send({ token });
   });
 
-const authenticateCheck = (serverOptions: IServerOptions) =>
+const authenticateCheck = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
+
     if (serverOptions.before) {
       await serverOptions.before({});
     }
@@ -121,8 +143,9 @@ const authenticateCheck = (serverOptions: IServerOptions) =>
     res.send("");
   });
 
-const tree = (serverOptions: IServerOptions) =>
+const tree = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const { path, page, ref } = req.query;
     const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
@@ -152,8 +175,9 @@ const tree = (serverOptions: IServerOptions) =>
     res.send(body);
   });
 
-const readFile = (serverOptions: IServerOptions) =>
+const readFile = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const file = req.params["0"];
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -183,8 +207,9 @@ const readFile = (serverOptions: IServerOptions) =>
     res.send(body);
   });
 
-const readFileRaw = (serverOptions: IServerOptions) =>
+const readFileRaw = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const file = req.params.file;
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -213,8 +238,9 @@ const readFileRaw = (serverOptions: IServerOptions) =>
     stream.pipe(res);
   });
 
-const headFile = (serverOptions: IServerOptions) =>
+const headFile = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const file = req.params["0"];
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -244,8 +270,9 @@ const headFile = (serverOptions: IServerOptions) =>
     res.end();
   });
 
-const commit = (serverOptions: IServerOptions) =>
+const commit = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const commitBody: ICommitBody = req.body;
     const { projectId } = serverOptions;
     const authorization = req.get("Authorization");
@@ -293,8 +320,9 @@ const commit = (serverOptions: IServerOptions) =>
     res.send(body);
   });
 
-const listPipelines = (serverOptions: IServerOptions) =>
+const listPipelines = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const authorization = req.get("Authorization");
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -321,8 +349,9 @@ const listPipelines = (serverOptions: IServerOptions) =>
     res.send(body);
   });
 
-const triggerPipeline = (serverOptions: IServerOptions) =>
+const triggerPipeline = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const authorization = req.get("Authorization");
     const { ref } = req.query;
     const { projectId } = serverOptions;
@@ -349,8 +378,9 @@ const triggerPipeline = (serverOptions: IServerOptions) =>
     res.send(body);
   });
 
-const getPipeline = (serverOptions: IServerOptions) =>
+const getPipeline = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const authorization = req.get("Authorization");
     const { id } = req.params;
     const { projectId } = serverOptions;
@@ -375,8 +405,9 @@ const getPipeline = (serverOptions: IServerOptions) =>
     res.send(body);
   });
 
-const branch = (serverOptions: IServerOptions) =>
+const branch = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const authorization = req.get("Authorization");
     const { ref } = req.params;
     const { projectId } = serverOptions;
@@ -401,8 +432,9 @@ const branch = (serverOptions: IServerOptions) =>
     res.send(body);
   });
 
-const getPermissions = (serverOptions: IServerOptions) =>
+const getPermissions = (getServerOptions: IServerOptionsForRequest) =>
   asyncHandler(async (req, res) => {
+    const serverOptions = await getServerOptions(req);
     const authorization = req.get("Authorization");
     if (serverOptions.before) {
       await serverOptions.before({});

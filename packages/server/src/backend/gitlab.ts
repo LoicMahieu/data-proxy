@@ -37,16 +37,19 @@ export interface IBackendGitlabOptions {
   timeout?: number;
   version?: string;
   privateToken: string;
+  basePath?: string;
 }
 
 export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
+  const appendBasePath = (path: string) =>
+    options.basePath ? `${options.basePath}/${path}` : path;
   return {
     async tree({ projectId, page, path, ref }: IBackendTreeOptions) {
       const { body, headers } = await got(
         `/projects/${encodeURIComponent(projectId)}/repository/tree?` +
           querystring.stringify({
             page,
-            path,
+            path: appendBasePath(path),
             ref,
           }),
         {
@@ -68,7 +71,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
       const { body, headers } = await got(
         `/projects/${encodeURIComponent(
           projectId,
-        )}/repository/files/${encodeURIComponent(file)}?` +
+        )}/repository/files/${encodeURIComponent(appendBasePath(file))}?` +
           querystring.stringify({
             ref,
           }),
@@ -102,7 +105,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
       return got.stream(
         `/projects/${encodeURIComponent(
           projectId,
-        )}/repository/files/${encodeURIComponent(file)}/raw?` +
+        )}/repository/files/${encodeURIComponent(appendBasePath(file))}/raw?` +
           querystring.stringify({
             ref,
           }),
@@ -119,7 +122,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
       const { headers } = await got(
         `/projects/${encodeURIComponent(
           projectId,
-        )}/repository/files/${encodeURIComponent(file)}?` +
+        )}/repository/files/${encodeURIComponent(appendBasePath(file))}?` +
           querystring.stringify({
             ref,
           }),
@@ -154,7 +157,13 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
         `/projects/${encodeURIComponent(projectId)}/repository/commits`,
         {
           baseUrl: getBaseUrl(options),
-          body: commitBody,
+          body: {
+            ...commitBody,
+            actions: commitBody.actions.map(action => ({
+              ...action,
+              file_path: appendBasePath(action.file_path),
+            })),
+          },
           headers: {
             "Private-Token": options.privateToken,
           },

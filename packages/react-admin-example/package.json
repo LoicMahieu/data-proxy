@@ -1,6 +1,6 @@
 {
   "name": "@data-proxy/react-admin-example",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server",
@@ -11,7 +11,7 @@
     "@babel/preset-env": "^7.7.6",
     "@babel/preset-react": "^7.7.4",
     "@data-proxy/react-admin-provider": "^0.10.2",
-    "@data-proxy/server": "^0.9.0",
+    "@data-proxy/server": "^0.10.0",
     "@material-ui/core": "^4",
     "@material-ui/icons": "^4",
     "@react-admin-git-provider/gitlab": "^0.9.0",
@@ -26,7 +26,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "devDependencies": {
-    "@data-proxy/server-auth-omnipartners": "^0.9.5",
+    "@data-proxy/server-auth-omnipartners": "^0.9.6",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "express": "^4.17.1",
     "lodash": "^4.17.15",

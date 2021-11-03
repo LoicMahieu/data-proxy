@@ -1,6 +1,7 @@
 import got from "got";
 import pick from "lodash/pick";
 import querystring from "querystring";
+import { join as pathJoin } from "path";
 import {
   IBackend,
   IBackendBaseOptions,
@@ -42,7 +43,7 @@ export interface IBackendGitlabOptions {
 
 export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
   const appendBasePath = (path: string) =>
-    options.basePath ? `${options.basePath}/${path}` : path;
+    options.basePath ? pathJoin(options.basePath, path) : path;
   return {
     async tree({ projectId, page, path, ref }: IBackendTreeOptions) {
       const { body, headers } = await got(

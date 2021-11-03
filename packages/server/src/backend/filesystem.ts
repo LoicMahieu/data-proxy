@@ -12,6 +12,15 @@ import {
   IBackendTreeOptions,
 } from "./interface";
 
+const fileNotFoundError = (filePath: string) =>
+  Boom.notFound("File does not exists", {
+    filePath,
+  });
+const fileIsDirectoryError = (filePath: string) =>
+  Boom.notFound("File is a directory", {
+    filePath,
+  });
+
 async function fileToTree(
   filePath: string,
   options: IBackendFilesystemOptions,
@@ -93,13 +102,13 @@ export const backendFilesystem = (
   async readFile({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
     if (!(await fs.pathExists(absFilePath))) {
-      throw Boom.notFound();
+      throw fileNotFoundError(absFilePath);
     }
 
     const stat = await fs.stat(absFilePath);
 
     if (stat.isDirectory()) {
-      throw Boom.notFound();
+      throw fileIsDirectoryError(absFilePath);
     }
 
     const content = await fs.readFile(absFilePath);
@@ -125,13 +134,12 @@ export const backendFilesystem = (
   async readFileRaw({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
     if (!(await fs.pathExists(absFilePath))) {
-      throw Boom.notFound();
+      throw fileNotFoundError(absFilePath);
     }
 
     const stat = await fs.stat(absFilePath);
-
     if (stat.isDirectory()) {
-      throw Boom.notFound();
+      throw fileIsDirectoryError(absFilePath);
     }
 
     return fs.createReadStream(absFilePath);
@@ -140,13 +148,12 @@ export const backendFilesystem = (
   async headFile({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
     if (!(await fs.pathExists(absFilePath))) {
-      throw Boom.notFound();
+      throw fileNotFoundError(absFilePath);
     }
 
     const stat = await fs.stat(absFilePath);
-
     if (stat.isDirectory()) {
-      throw Boom.notFound();
+      throw fileIsDirectoryError(absFilePath);
     }
 
     return {

@@ -59,6 +59,7 @@ async function doCommitAction(
 ) {
   const absFilePath = path.join(options.cwd, action.file_path);
   if (action.action === "create" || action.action === "update") {
+    await fs.mkdirp(path.dirname(absFilePath));
     await fs.writeFile(
       absFilePath,
       action.content,

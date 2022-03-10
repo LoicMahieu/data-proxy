@@ -8,6 +8,7 @@ import {
   IBackendCommitOptions,
   IBackendListPipelinesOptions,
   IBackendReadFileOptions,
+  IBackendTreeFile,
   IBackendTreeOptions,
 } from "./interface";
 
@@ -44,6 +45,8 @@ export interface IBackendGitlabOptions {
 export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
   const appendBasePath = (path: string) =>
     options.basePath ? pathJoin(options.basePath, path) : path;
+  const removeBasePath = (path: string) =>
+    path.replace(options.basePath || "", "").replace(/^\//, "");
   return {
     async tree({ projectId, page, path, ref }: IBackendTreeOptions) {
       const { body, headers } = await got(
@@ -62,9 +65,14 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           timeout: options.timeout,
         },
       );
+      const tree: IBackendTreeFile[] = body;
+      const treeWithoutBasePath = tree.map(file => ({
+        ...file,
+        path: removeBasePath(file.path),
+      }));
 
       return {
-        body,
+        body: treeWithoutBasePath,
         headers: pick(headers, basePickHeaders),
       };
     },

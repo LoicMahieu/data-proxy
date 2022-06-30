@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server",
-    "start:server": "ts-node-dev scripts/test-server.ts"
+    "start:server": "ts-node-dev -T scripts/test-server.ts"
   },
   "dependencies": {
     "@babel/core": "^7.7.5",

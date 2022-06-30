@@ -27,7 +27,7 @@ export interface IBackendTreeFile {
 export interface IBackendFile {
   blob_id: string;
   content: string;
-  encoding: "base64";
+  encoding: BufferEncoding;
   file_path: string;
 }
 

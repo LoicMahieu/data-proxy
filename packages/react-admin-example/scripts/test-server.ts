@@ -1,10 +1,11 @@
-import { backendGitlab } from "@data-proxy/server";
+import { backendGitlab, backendGithub } from "@data-proxy/server";
 import { authOmnipartners } from "@data-proxy/server-auth-omnipartners";
 import {
   applyMiddlewares,
   authBaseMap,
   backendFilesystem,
 } from "@data-proxy/server/src";
+import { IBackend } from "@data-proxy/server/src/backend/interface";
 import express, { Application } from "express";
 import get from "lodash/get";
 import morgan from "morgan";
@@ -77,6 +78,32 @@ const applyGitlab = (app: Application) => {
   return app;
 };
 
-apply(express().use(morgan("tiny"))).listen(3001);
+const applyGithub = (app: Application) => {
+  applyMiddlewares(app, {
+    backend: backendGithub({
+      privateToken: process.env.GITLAB_PRIVATE_TOKEN || "",
+      token: process.env.GITHUB_TOKEN || "",
+    }),
 
-console.log('Server listen to http://localhost:3001')
+    auth: authBaseMap({
+      authMap: {
+        dev: "$2b$10$FbVbqQEQOA1SNxNpqGUVcu4oLOJmSdKC4m/tz/2RCflAOszVYwI/q", // dev
+      },
+      disableCheck: false,
+      jwtSecret: "dev",
+    }),
+    prefix: "",
+    projectId: process.env.GITLAB_PROJECT_ID || "",
+  });
+
+  return app;
+};
+
+applyGithub(express().use(morgan("tiny")))
+  .use((err, req, res, next) => {
+    console.log(err);
+    next(err);
+  })
+  .listen(3001);
+
+console.log("Server listen to http://localhost:3001");

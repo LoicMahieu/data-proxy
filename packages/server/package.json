@@ -34,6 +34,7 @@
     "lodash-es": "^4.17.15",
     "micromatch": "^4.0.2",
     "morgan": "^1.9.1",
+    "octokit": "^1.8.1",
     "picomatch": "^2.1.1",
     "uuid": "^3.3.3"
   },

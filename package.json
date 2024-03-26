@@ -14,9 +14,9 @@
     "packages/*"
   ],
   "devDependencies": {
-    "lerna": "^3.19.0",
+    "lerna": "^8.1.2",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.3"
+    "typescript": "^5.4.3"
   }
 }

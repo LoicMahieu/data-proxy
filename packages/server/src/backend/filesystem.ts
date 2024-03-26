@@ -1,6 +1,6 @@
-import Boom from "boom";
-import fs from "fs-extra";
-import hasha from "hasha";
+import fs from "fs/promises";
+import { createReadStream } from "fs";
+import { hash as hasha } from "hasha";
 import path from "path";
 import { v4 as uuid } from "uuid";
 import { ICommitAction } from "../types";
@@ -11,22 +11,32 @@ import {
   IBackendTreeFile,
   IBackendTreeOptions,
 } from "./interface";
+import { notFound } from "@hapi/boom";
 
 const fileNotFoundError = (filePath: string) =>
-  Boom.notFound("File does not exists", {
+  notFound("File does not exists", {
     filePath,
   });
 const fileIsDirectoryError = (filePath: string) =>
-  Boom.notFound("File is a directory", {
+  notFound("File is a directory", {
     filePath,
   });
+
+const pathExists = async (f: string) => {
+  try {
+    await fs.stat(f);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 async function fileToTree(
   filePath: string,
   options: IBackendFilesystemOptions,
 ) {
   const absFilePath = path.join(options.cwd, filePath);
-  if (!(await fs.pathExists(absFilePath))) {
+  if (!(await pathExists(absFilePath))) {
     return;
   }
 
@@ -59,10 +69,10 @@ async function doCommitAction(
 ) {
   const absFilePath = path.join(options.cwd, action.file_path);
   if (action.action === "create" || action.action === "update") {
-    await fs.mkdirp(path.dirname(absFilePath));
+    await fs.mkdir(path.dirname(absFilePath), { recursive: true });
     await fs.writeFile(
       absFilePath,
-      action.content,
+      action.content || "",
       action.encoding === "base64" ? "base64" : "utf8",
     );
   } else if (action.action === "delete") {
@@ -80,7 +90,7 @@ export const backendFilesystem = (
   async tree({ projectId, page, path: basePath, ref }: IBackendTreeOptions) {
     const absBasePath = path.join(options.cwd, basePath);
     if (
-      !(await fs.pathExists(absBasePath)) &&
+      !(await pathExists(absBasePath)) &&
       !(await fs.stat(absBasePath)).isDirectory
     ) {
       return {
@@ -102,7 +112,7 @@ export const backendFilesystem = (
 
   async readFile({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
-    if (!(await fs.pathExists(absFilePath))) {
+    if (!(await pathExists(absFilePath))) {
       throw fileNotFoundError(absFilePath);
     }
 
@@ -113,7 +123,7 @@ export const backendFilesystem = (
     }
 
     const content = await fs.readFile(absFilePath);
-    const hash = hasha(content);
+    const hash = await hasha(content);
 
     return {
       body: {
@@ -134,7 +144,7 @@ export const backendFilesystem = (
 
   async readFileRaw({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
-    if (!(await fs.pathExists(absFilePath))) {
+    if (!(await pathExists(absFilePath))) {
       throw fileNotFoundError(absFilePath);
     }
 
@@ -143,12 +153,12 @@ export const backendFilesystem = (
       throw fileIsDirectoryError(absFilePath);
     }
 
-    return fs.createReadStream(absFilePath);
+    return createReadStream(absFilePath);
   },
 
   async headFile({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
-    if (!(await fs.pathExists(absFilePath))) {
+    if (!(await pathExists(absFilePath))) {
       throw fileNotFoundError(absFilePath);
     }
 

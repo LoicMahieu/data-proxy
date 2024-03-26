@@ -1,8 +1,8 @@
 import bodyParser, { OptionsJson } from "body-parser";
-import Boom from "boom";
 import { Application, ErrorRequestHandler } from "express";
 import asyncHandler from "express-async-handler";
 import { ICommitBody, IServerOptions, IServerOptionsForRequest } from "./types";
+import { badRequest, isBoom, unauthorized } from "@hapi/boom";
 
 const makeOptionsForRequest: (
   serverOptions: IServerOptions,
@@ -87,7 +87,7 @@ export function applyMiddlewares(
   );
 
   const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    if (Boom.isBoom(err)) {
+    if (isBoom(err)) {
       res.set(err.output.headers);
       res.status(err.output.statusCode).send(err.output.payload);
       return;
@@ -113,7 +113,7 @@ const authenticate = (getServerOptions: IServerOptionsForRequest) =>
     const token = await serverOptions.auth.authLogin(req.body);
 
     if (!token) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     res.send({ token });
@@ -137,7 +137,7 @@ const authenticateCheck = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     res.send("");
@@ -161,7 +161,7 @@ const tree = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const { body, headers } = await serverOptions.backend.tree({
@@ -194,7 +194,7 @@ const readFile = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const { body, headers } = await serverOptions.backend.readFile({
@@ -226,7 +226,7 @@ const readFileRaw = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const stream = await serverOptions.backend.readFileRaw({
@@ -257,7 +257,7 @@ const headFile = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const { headers } = await serverOptions.backend.headFile({
@@ -283,7 +283,7 @@ const commit = (getServerOptions: IServerOptionsForRequest) =>
       !commitBody.actions ||
       !commitBody.actions[0]
     ) {
-      throw Boom.badRequest();
+      throw badRequest();
     }
 
     if (serverOptions.before) {
@@ -294,16 +294,16 @@ const commit = (getServerOptions: IServerOptionsForRequest) =>
     }
 
     if (!authorization) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const authData = await serverOptions.auth.authCheck(authorization);
 
     if (!authorization || !authData) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
-    let beforeCommitResult: void | ICommitBody;
+    let beforeCommitResult: ICommitBody | undefined | void = undefined;
     if (serverOptions.beforeCommit) {
       beforeCommitResult = await serverOptions.beforeCommit(
         commitBody,
@@ -312,7 +312,7 @@ const commit = (getServerOptions: IServerOptionsForRequest) =>
     }
 
     const { body, headers } = await serverOptions.backend.commit({
-      commitBody: beforeCommitResult ? beforeCommitResult : commitBody,
+      commitBody: beforeCommitResult || commitBody,
       projectId,
     });
 
@@ -337,7 +337,7 @@ const listPipelines = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const { body, headers } = await serverOptions.backend.listPipelines({
@@ -366,7 +366,7 @@ const triggerPipeline = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const { body, headers } = await serverOptions.backend.triggerPipeline({
@@ -393,7 +393,7 @@ const getPipeline = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const { body, headers } = await serverOptions.backend.getPipeline({
@@ -420,7 +420,7 @@ const branch = (getServerOptions: IServerOptionsForRequest) =>
       !authorization ||
       !(await serverOptions.auth.authCheck(authorization))
     ) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const { body, headers } = await serverOptions.backend.showBranch({
@@ -444,7 +444,7 @@ const getPermissions = (getServerOptions: IServerOptionsForRequest) =>
       authorization && (await serverOptions.auth.authCheck(authorization));
 
     if (!tokenData) {
-      throw Boom.unauthorized();
+      throw unauthorized();
     }
 
     const permissions = serverOptions.getPermissions

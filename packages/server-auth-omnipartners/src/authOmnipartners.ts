@@ -4,7 +4,12 @@ import {
   IAuthBaseOptions,
   IAuthTokenData,
 } from "@data-proxy/server";
-import { IUser, IUserDataOptions, Omnipartners } from "omnipartners";
+import {
+  IUser,
+  IUserDataOptions,
+  Omnipartners,
+  OmnipartnersError,
+} from "omnipartners";
 
 export interface IAuthBaseMapOptions
   extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {
@@ -26,7 +31,7 @@ export const authOmnipartners = ({
 }: IAuthBaseMapOptions): IAuthBackend =>
   authBase({
     ...options,
-    check: async login => true,
+    check: async (login) => true,
     verifyPassword: async (login, password) => {
       let data: IUser | void;
 
@@ -38,11 +43,11 @@ export const authOmnipartners = ({
         });
       } catch (err) {
         if (
-          err.code !== "OP/OPStatusError/3" && // User not found in the system.
-          err.code !== "OP/OPStatusError/4" && // User is found but not active in the system.
-          err.code !== "OP/OPStatusError/5" && // Password is incorrect.
-          err.code !== "OP/OPStatusError/17" && // Password not found.
-          err.code !== "OP/OPStatusError/28" // Password does not meet the required specifications.
+          (err as OmnipartnersError).code !== "OP/OPStatusError/3" && // User not found in the system.
+          (err as OmnipartnersError).code !== "OP/OPStatusError/4" && // User is found but not active in the system.
+          (err as OmnipartnersError).code !== "OP/OPStatusError/5" && // Password is incorrect.
+          (err as OmnipartnersError).code !== "OP/OPStatusError/17" && // Password not found.
+          (err as OmnipartnersError).code !== "OP/OPStatusError/28" // Password does not meet the required specifications.
         ) {
           throw err;
         }

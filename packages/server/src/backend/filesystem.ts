@@ -1,6 +1,5 @@
-import fs from "fs/promises";
-import { createReadStream } from "fs";
-import { hash as hasha } from "hasha";
+import fs from "fs-extra";
+import hasha from "hasha";
 import path from "path";
 import { v4 as uuid } from "uuid";
 import { ICommitAction } from "../types";
@@ -22,21 +21,12 @@ const fileIsDirectoryError = (filePath: string) =>
     filePath,
   });
 
-const pathExists = async (f: string) => {
-  try {
-    await fs.stat(f);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 async function fileToTree(
   filePath: string,
   options: IBackendFilesystemOptions,
 ) {
   const absFilePath = path.join(options.cwd, filePath);
-  if (!(await pathExists(absFilePath))) {
+  if (!(await fs.pathExists(absFilePath))) {
     return;
   }
 
@@ -90,7 +80,7 @@ export const backendFilesystem = (
   async tree({ projectId, page, path: basePath, ref }: IBackendTreeOptions) {
     const absBasePath = path.join(options.cwd, basePath);
     if (
-      !(await pathExists(absBasePath)) &&
+      !(await fs.pathExists(absBasePath)) &&
       !(await fs.stat(absBasePath)).isDirectory
     ) {
       return {
@@ -112,7 +102,7 @@ export const backendFilesystem = (
 
   async readFile({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
-    if (!(await pathExists(absFilePath))) {
+    if (!(await fs.pathExists(absFilePath))) {
       throw fileNotFoundError(absFilePath);
     }
 
@@ -144,7 +134,7 @@ export const backendFilesystem = (
 
   async readFileRaw({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
-    if (!(await pathExists(absFilePath))) {
+    if (!(await fs.pathExists(absFilePath))) {
       throw fileNotFoundError(absFilePath);
     }
 
@@ -153,12 +143,12 @@ export const backendFilesystem = (
       throw fileIsDirectoryError(absFilePath);
     }
 
-    return createReadStream(absFilePath);
+    return fs.createReadStream(absFilePath);
   },
 
   async headFile({ projectId, ref, file }: IBackendReadFileOptions) {
     const absFilePath = path.join(options.cwd, file);
-    if (!(await pathExists(absFilePath))) {
+    if (!(await fs.pathExists(absFilePath))) {
       throw fileNotFoundError(absFilePath);
     }
 

@@ -31,7 +31,7 @@
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "got": "9",
-    "hasha": "^6.0.0",
+    "hasha": "5",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",

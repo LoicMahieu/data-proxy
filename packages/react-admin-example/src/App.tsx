@@ -14,23 +14,25 @@ import {
   TextInput,
   BooleanInput,
   DateField,
-  CardActions,
   CREATE,
+  ListProps,
+  EditProps,
+  CreateProps,
+  TopToolbar,
+  useRefresh,
+  RaRecord,
 } from "react-admin";
-import { refreshView as refreshViewAction } from "ra-core";
-import { connect } from "react-redux";
 import { createAuthProvider } from "@data-proxy/react-admin-provider";
-import Button from "@material-ui/core/Button";
 import { dataProvider } from "./dataProvider";
-import { CircularProgress } from "@material-ui/core";
-import { CheckCircle, HighlightOff } from "@material-ui/icons";
+import { Button, CircularProgress } from "@mui/material";
+import { CheckCircle, HighlightOff } from "@mui/icons-material";
 
 const authProvider = createAuthProvider({
-  projectId: process.env.GITLAB_PROJECT_ID,
-  host: process.env.REACT_ADMIN_DATA_API,
+  projectId: process.env.GITLAB_PROJECT_ID || "",
+  host: process.env.REACT_ADMIN_DATA_API || "",
 });
 
-const UserList = props => (
+const UserList = (props: ListProps) => (
   <List {...props}>
     <Datagrid rowClick="edit">
       {/* <TextField source="id" /> */}
@@ -42,7 +44,7 @@ const UserList = props => (
   </List>
 );
 
-const UserEdit = props => (
+const UserEdit = (props: EditProps) => (
   <Edit {...props}>
     <SimpleForm>
       <BooleanInput source="active" />
@@ -51,7 +53,7 @@ const UserEdit = props => (
   </Edit>
 );
 
-const UserCreate = props => (
+const UserCreate = (props: CreateProps) => (
   <Create {...props}>
     <SimpleForm>
       <BooleanInput source="active" />
@@ -60,7 +62,7 @@ const UserCreate = props => (
   </Create>
 );
 
-const ArticleList = props => (
+const ArticleList = (props: ListProps) => (
   <List {...props}>
     <Datagrid rowClick="edit">
       {/* <TextField source="id" /> */}
@@ -72,7 +74,7 @@ const ArticleList = props => (
   </List>
 );
 
-const ArticleEdit = props => (
+const ArticleEdit = (props: EditProps) => (
   <Edit {...props}>
     <SimpleForm>
       <BooleanInput source="active" />
@@ -81,7 +83,7 @@ const ArticleEdit = props => (
   </Edit>
 );
 
-const ArticleCreate = props => (
+const ArticleCreate = (props: CreateProps) => (
   <Create {...props}>
     <SimpleForm>
       <BooleanInput source="active" />
@@ -90,15 +92,13 @@ const ArticleCreate = props => (
   </Create>
 );
 
-const PipelineListActions = connect(
-  null,
-  { refreshView: refreshViewAction },
-)(({ refreshView }) => {
+const PipelineListActions = () => {
   const [loading, setLoading] = useState(false);
+  const refresh = useRefresh();
 
   useEffect(() => {
     const interval = setInterval(() => {
-      refreshView();
+      refresh();
     }, 60 * 1000);
 
     return () => {
@@ -107,7 +107,7 @@ const PipelineListActions = connect(
   }, []);
 
   return (
-    <CardActions>
+    <TopToolbar>
       <Button
         color="primary"
         disabled={loading}
@@ -117,8 +117,8 @@ const PipelineListActions = connect(
           }
           try {
             setLoading(true);
-            await dataProvider(CREATE, "pipelines");
-            refreshView();
+            await dataProvider(CREATE, "pipelines", {});
+            refresh();
           } catch (err) {
             console.error(err);
           } finally {
@@ -128,18 +128,24 @@ const PipelineListActions = connect(
       >
         Trigger pipeline
       </Button>
-    </CardActions>
+    </TopToolbar>
   );
-});
-const PipelineStatusField = ({ record = {}, source }) =>
-  record[source] === "success" ? (
+};
+const PipelineStatusField = ({
+  record,
+  source,
+}: {
+  record?: RaRecord;
+  source: string;
+}) =>
+  record?.[source] === "success" ? (
     <CheckCircle color="primary" />
-  ) : record[source] === "pending" || record[source] === "running" ? (
+  ) : record?.[source] === "pending" || record?.[source] === "running" ? (
     <CircularProgress size={20} />
   ) : (
     <HighlightOff color="error" />
   );
-export const PipelineList = props => (
+export const PipelineList = (props: ListProps) => (
   <List {...props} actions={<PipelineListActions />}>
     <Datagrid rowClick="edit">
       <TextField source="id" />
@@ -161,7 +167,7 @@ const App = () => (
       authProvider(type, { login: username, password })
     }
   >
-    {permissions => {
+    {(permissions) => {
       return [
         <Resource
           name="users"

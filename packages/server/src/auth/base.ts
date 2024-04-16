@@ -40,9 +40,9 @@ const createAuthCheck = (options: IAuthBaseOptions) => async (
     data = jwt.verify(token, options.jwtSecret) as any;
   } catch (err) {
     if (
-      err.name !== "TokenExpiredError" &&
-      err.name !== "JsonWebTokenError" &&
-      err.name !== "NotBeforeError"
+      (err as Error).name !== "TokenExpiredError" &&
+      (err as Error).name !== "JsonWebTokenError" &&
+      (err as Error).name !== "NotBeforeError"
     ) {
       throw err;
     }

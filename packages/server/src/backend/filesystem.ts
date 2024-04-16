@@ -1,4 +1,3 @@
-import Boom from "boom";
 import fs from "fs-extra";
 import hasha from "hasha";
 import path from "path";
@@ -11,13 +10,14 @@ import {
   IBackendTreeFile,
   IBackendTreeOptions,
 } from "./interface";
+import { notFound } from "@hapi/boom";
 
 const fileNotFoundError = (filePath: string) =>
-  Boom.notFound("File does not exists", {
+  notFound("File does not exists", {
     filePath,
   });
 const fileIsDirectoryError = (filePath: string) =>
-  Boom.notFound("File is a directory", {
+  notFound("File is a directory", {
     filePath,
   });
 
@@ -59,10 +59,10 @@ async function doCommitAction(
 ) {
   const absFilePath = path.join(options.cwd, action.file_path);
   if (action.action === "create" || action.action === "update") {
-    await fs.mkdirp(path.dirname(absFilePath));
+    await fs.mkdir(path.dirname(absFilePath), { recursive: true });
     await fs.writeFile(
       absFilePath,
-      action.content,
+      action.content || "",
       action.encoding === "base64" ? "base64" : "utf8",
     );
   } else if (action.action === "delete") {
@@ -113,7 +113,7 @@ export const backendFilesystem = (
     }
 
     const content = await fs.readFile(absFilePath);
-    const hash = hasha(content);
+    const hash = await hasha(content);
 
     return {
       body: {

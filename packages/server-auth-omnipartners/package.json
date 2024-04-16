@@ -5,28 +5,32 @@
     "dist"
   ],
   "main": "dist/index.js",
-  "module": "dist/server-auth-omnipartners.esm.js",
+  "module": "dist/index.mjs",
   "typings": "dist/index.d.ts",
   "author": "Loïc Mahieu <mahieuloic@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LoicMahieu/data-proxy"
+  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "test": "npm run build",
-    "build": "tsdx build",
-    "start": "tsdx watch",
-    "watch": "tsdx watch",
+    "build": "tsup-node",
+    "start": "tsup-node src --watch",
+    "watch": "tsup-node src --watch",
     "prepare": "yarn build"
   },
   "dependencies": {
     "@data-proxy/server": "^0.11.3"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.4",
-    "omnipartners": "^2.21.0",
-    "tsdx": "^0.11.0",
-    "winston": "^3.2.1"
+    "@types/node-fetch": "^2.6.11",
+    "omnipartners": "^2.92.27",
+    "tsup": "^8.0.2",
+    "winston": "^3.13.0"
   },
   "peerDependencies": {
     "omnipartners": "^2.21.0"

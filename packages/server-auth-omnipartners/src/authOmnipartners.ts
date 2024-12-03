@@ -11,10 +11,11 @@ import {
   OmnipartnersError,
 } from "omnipartners";
 
-export interface IAuthBaseMapOptions
+export interface IAuthBaseMapOptions<FormattedUser>
   extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {
   omnipartners: Omnipartners;
   verifyUser?: (user: IUser) => false | Omit<IAuthTokenData, "login">;
+  formatUser?: (user: IUser) => FormattedUser;
 }
 
 export const dataOptions: IUserDataOptions = [
@@ -24,11 +25,12 @@ export const dataOptions: IUserDataOptions = [
   "-access_rights",
 ];
 
-export const authOmnipartners = ({
+export const authOmnipartners = <FormattedUser = any>({
   omnipartners,
   verifyUser,
+  formatUser,
   ...options
-}: IAuthBaseMapOptions): IAuthBackend =>
+}: IAuthBaseMapOptions<FormattedUser>): IAuthBackend =>
   authBase({
     ...options,
     check: async (login) => true,
@@ -63,7 +65,7 @@ export const authOmnipartners = ({
       }
 
       return {
-        user: data,
+        user: formatUser ? formatUser(data) : data,
         verifyData,
       };
     },

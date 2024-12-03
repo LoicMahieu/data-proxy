@@ -1,6 +1,6 @@
 {
   "name": "@data-proxy/react-admin-example",
-  "version": "0.8.12",
+  "version": "0.8.13",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server",
@@ -25,7 +25,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "devDependencies": {
-    "@data-proxy/server-auth-omnipartners": "^0.9.10",
+    "@data-proxy/server-auth-omnipartners": "^0.10.0",
     "@types/fs-extra": "^11.0.4",
     "@types/react-dom": "^18.2.22",
     "babel-plugin-transform-class-properties": "^6.24.1",

@@ -28,8 +28,7 @@
   },
   "devDependencies": {
     "@react-admin-git-provider/common": "^0.13.0",
-    "tslint": "^5.20.1",
-    "tsup": "^8.0.2",
-    "typescript": "^5.4.3"
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
   }
 }

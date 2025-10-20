@@ -17,7 +17,7 @@ const config: WebpackConfiguration = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
     fallback: {
-      path: false,
+      path: require.resolve("path-browserify"),
       querystring: false,
     },
   },
@@ -42,6 +42,9 @@ const config: WebpackConfiguration = {
           process.env.GITLAB_DATA_BASE_PATH || "data",
         ),
       },
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
     }),
   ],
   devServer: {

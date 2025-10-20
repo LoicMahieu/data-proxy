@@ -27,10 +27,10 @@
     "@data-proxy/server": "^0.12.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.6.11",
-    "omnipartners": "^2.92.27",
-    "tsup": "^8.0.2",
-    "winston": "^3.13.0"
+    "@types/node-fetch": "^2.6.13",
+    "omnipartners": "^2.92.52",
+    "tsup": "^8.5.0",
+    "winston": "^3.18.3"
   },
   "peerDependencies": {
     "omnipartners": "^2.21.0"

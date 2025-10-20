@@ -161,12 +161,7 @@ export const PipelineList = (props: ListProps) => (
 );
 
 const App = () => (
-  <Admin
-    dataProvider={dataProvider}
-    authProvider={(type, { username, password } = {}) =>
-      authProvider(type, { login: username, password })
-    }
-  >
+  <Admin dataProvider={dataProvider} authProvider={authProvider()}>
     {(permissions) => {
       return [
         <Resource

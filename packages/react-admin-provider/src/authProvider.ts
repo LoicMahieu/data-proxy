@@ -2,6 +2,7 @@ import {
   AbstractAuthBridge,
   LocalStorageAuthBridge,
 } from "@react-admin-git-provider/common";
+import type { AuthProvider } from "react-admin";
 
 export interface IAuthOptions {
   host: string;
@@ -17,88 +18,92 @@ const pTry = async <T = any>(fn: () => Promise<T>): Promise<T | undefined> => {
   }
 };
 
-export const createAuthProvider = ({
-  host,
-  projectId,
-  authBridge = new LocalStorageAuthBridge(),
-}: IAuthOptions) => async (
-  type: string,
-  params: { login: string; password: string },
-) => {
-  try {
-    if (type === "AUTH_LOGIN") {
-      const { login, password } = params;
-      const res = await fetch(
-        `${host}/__data-proxy__/${encodeURIComponent(projectId)}/authenticate`,
-        {
-          body: JSON.stringify({ login, password }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "post",
-        },
-      );
-      const json = await pTry(() => res.json());
-      if (res.status < 200 || res.status >= 300) {
-        throw new Error((json && json.message) || res.statusText);
-      }
-      if (json && json.token) {
-        authBridge.setToken(json.token);
-        return Promise.resolve();
-      } else {
-        return Promise.reject();
-      }
-    }
-    if (type === "AUTH_LOGOUT") {
-      authBridge.removeToken();
-      return Promise.resolve();
-    }
-    if (type === "AUTH_ERROR") {
-      return Promise.resolve();
-    }
-    if (type === "AUTH_CHECK") {
-      const token = authBridge.getToken();
-      if (!token) {
-        return Promise.reject();
-      }
-      const res = await fetch(
-        `${host}/__data-proxy__/${encodeURIComponent(
-          projectId,
-        )}/authenticate-check`,
-        {
-          headers: {
-            Authorization: "Bearer " + authBridge.getToken(),
-            "Content-Type": "application/json",
-          },
-          method: "head",
-        },
-      );
-      if (res.status < 200 || res.status >= 300) {
-        return Promise.reject();
-      }
-      return authBridge.getToken() ? Promise.resolve() : Promise.reject();
-    }
-
-    if (type === "AUTH_GET_PERMISSIONS") {
-      const res = await fetch(
-        `${host}/__data-proxy__/${encodeURIComponent(projectId)}/permissions`,
-        {
-          headers: {
-            Authorization: "Bearer " + authBridge.getToken(),
-            "Content-Type": "application/json",
-          },
-          method: "get",
-        },
-      );
-      if (res.status < 200 || res.status >= 300) {
-        throw new Error(res.statusText);
-      }
-
-      return res.json();
-    }
-    return Promise.reject("Unknown method");
-  } catch (err) {
-    console.error(err);
-    return Promise.reject(err && (err as Error).message);
-  }
+const pathJoin = (...segments: string[]): string => {
+  const parts = segments
+    .filter((segment) => !!segment)
+    .map((segment) => {
+      return segment
+        .toString()
+        .split(/[\\/]+/)
+        .filter((part) => !!part);
+    })
+    .flat();
+  return parts.join("/");
 };
+
+export const createAuthProvider =
+  ({
+    host,
+    projectId,
+    authBridge = new LocalStorageAuthBridge(),
+  }: IAuthOptions) =>
+  (): AuthProvider => {
+    const fetchProxy = async (uri: string, options: RequestInit) => {
+      return fetch(
+        pathJoin(host, "__data-proxy__", encodeURIComponent(projectId), uri),
+        {
+          ...options,
+          headers: {
+            "Content-Type": "application/json",
+            ...options.headers,
+          },
+        },
+      );
+    };
+
+    return {
+      async login(params) {
+        const { username: login, password } = params;
+        const res = await fetchProxy("/authenticate", {
+          body: JSON.stringify({ login, password }),
+          method: "post",
+        });
+        const json = await pTry(() => res.json());
+        if (res.status < 200 || res.status >= 300) {
+          throw new Error((json && json.message) || res.statusText);
+        }
+        if (json && json.token) {
+          authBridge.setToken(json.token);
+        } else {
+          throw new Error("Invalid login or password");
+        }
+      },
+      async checkError(error) {
+        /* ... */
+      },
+      async checkAuth(params) {
+        const token = authBridge.getToken();
+        if (!token) {
+          throw new Error("Unauthorized");
+        }
+        const res = await fetchProxy("/authenticate-check", {
+          method: "head",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        });
+        if (res.status < 200 || res.status >= 300) {
+          throw new Error(res.statusText);
+        }
+        if (!authBridge.getToken()) {
+          throw new Error("login.required"); // react-admin passes the error message to the translation layer
+        }
+      },
+      async logout() {
+        authBridge.removeToken();
+      },
+
+      async getPermissions() {
+        const res = await fetchProxy("/permissions", {
+          headers: {
+            Authorization: "Bearer " + authBridge.getToken(),
+          },
+        });
+        if (res.status < 200 || res.status >= 300) {
+          throw new Error(res.statusText);
+        }
+
+        return res.json();
+      },
+    };
+  };

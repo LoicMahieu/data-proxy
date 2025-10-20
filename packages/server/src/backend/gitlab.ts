@@ -1,6 +1,6 @@
 import got from "got";
 import pick from "lodash/pick";
-import querystring from "querystring";
+import { stringify } from "querystring";
 import { join as pathJoin } from "path";
 import {
   IBackend,
@@ -51,7 +51,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
     async tree({ projectId, page, path, ref }: IBackendTreeOptions) {
       const { body, headers } = await got(
         `/projects/${encodeURIComponent(projectId)}/repository/tree?` +
-          querystring.stringify({
+          stringify({
             page,
             path: appendBasePath(path),
             ref,
@@ -66,7 +66,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
         },
       );
       const tree: IBackendTreeFile[] = body;
-      const treeWithoutBasePath = tree.map(file => ({
+      const treeWithoutBasePath = tree.map((file) => ({
         ...file,
         path: removeBasePath(file.path),
       }));
@@ -81,7 +81,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
         `/projects/${encodeURIComponent(
           projectId,
         )}/repository/files/${encodeURIComponent(appendBasePath(file))}?` +
-          querystring.stringify({
+          stringify({
             ref,
           }),
         {
@@ -115,7 +115,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
         `/projects/${encodeURIComponent(
           projectId,
         )}/repository/files/${encodeURIComponent(appendBasePath(file))}/raw?` +
-          querystring.stringify({
+          stringify({
             ref,
           }),
         {
@@ -132,7 +132,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
         `/projects/${encodeURIComponent(
           projectId,
         )}/repository/files/${encodeURIComponent(appendBasePath(file))}?` +
-          querystring.stringify({
+          stringify({
             ref,
           }),
         {
@@ -168,7 +168,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           baseUrl: getBaseUrl(options),
           body: {
             ...commitBody,
-            actions: commitBody.actions.map(action => ({
+            actions: commitBody.actions.map((action) => ({
               ...action,
               file_path: appendBasePath(action.file_path),
             })),
@@ -191,7 +191,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
     async listPipelines({ projectId, ref }: IBackendListPipelinesOptions) {
       const { body, headers } = await got(
         `/projects/${encodeURIComponent(projectId)}/pipelines?` +
-          querystring.stringify({
+          stringify({
             ref,
           }),
         {
@@ -213,7 +213,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
     async triggerPipeline({ projectId, ref }: IBackendListPipelinesOptions) {
       const { body, headers } = await got(
         `/projects/${encodeURIComponent(projectId)}/pipeline?` +
-          querystring.stringify({
+          stringify({
             ref,
           }),
         {
@@ -262,7 +262,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
         `/projects/${encodeURIComponent(
           projectId,
         )}/repository/branches/${encodeURIComponent(ref)}?` +
-          querystring.stringify({
+          stringify({
             ref,
           }),
         {

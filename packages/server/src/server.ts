@@ -6,7 +6,7 @@ import { badRequest, isBoom, unauthorized } from "@hapi/boom";
 
 const makeOptionsForRequest: (
   serverOptions: IServerOptions,
-) => IServerOptionsForRequest = serverOptions => async req => {
+) => IServerOptionsForRequest = (serverOptions) => async (req) => {
   return {
     ...serverOptions,
     auth:
@@ -152,8 +152,8 @@ const tree = (getServerOptions: IServerOptionsForRequest) =>
 
     if (serverOptions.before) {
       await serverOptions.before({
-        path,
-        ref,
+        path: path?.toString(),
+        ref: ref?.toString(),
       });
     }
 
@@ -165,10 +165,10 @@ const tree = (getServerOptions: IServerOptionsForRequest) =>
     }
 
     const { body, headers } = await serverOptions.backend.tree({
-      page,
-      path,
+      page: page?.toString() || "1",
+      path: path?.toString() || "",
       projectId,
-      ref,
+      ref: ref?.toString() || "",
     });
 
     res.set(headers);
@@ -186,7 +186,7 @@ const readFile = (getServerOptions: IServerOptionsForRequest) =>
     if (serverOptions.before) {
       await serverOptions.before({
         path: file,
-        ref,
+        ref: ref?.toString(),
       });
     }
 
@@ -200,7 +200,7 @@ const readFile = (getServerOptions: IServerOptionsForRequest) =>
     const { body, headers } = await serverOptions.backend.readFile({
       file,
       projectId,
-      ref,
+      ref: ref?.toString() || "",
     });
 
     res.set(headers);
@@ -218,7 +218,7 @@ const readFileRaw = (getServerOptions: IServerOptionsForRequest) =>
     if (serverOptions.before) {
       await serverOptions.before({
         path: file,
-        ref,
+        ref: ref?.toString() || "",
       });
     }
 
@@ -232,7 +232,7 @@ const readFileRaw = (getServerOptions: IServerOptionsForRequest) =>
     const stream = await serverOptions.backend.readFileRaw({
       file,
       projectId,
-      ref,
+      ref: ref?.toString() || "",
     });
 
     stream.pipe(res);
@@ -249,7 +249,7 @@ const headFile = (getServerOptions: IServerOptionsForRequest) =>
     if (serverOptions.before) {
       await serverOptions.before({
         path: file,
-        ref,
+        ref: ref?.toString() || "",
       });
     }
 
@@ -263,7 +263,7 @@ const headFile = (getServerOptions: IServerOptionsForRequest) =>
     const { headers } = await serverOptions.backend.headFile({
       file,
       projectId,
-      ref,
+      ref: ref?.toString() || "",
     });
 
     res.set(headers);
@@ -329,7 +329,7 @@ const listPipelines = (getServerOptions: IServerOptionsForRequest) =>
 
     if (serverOptions.before) {
       await serverOptions.before({
-        ref,
+        ref: ref?.toString() || "",
       });
     }
 
@@ -342,7 +342,7 @@ const listPipelines = (getServerOptions: IServerOptionsForRequest) =>
 
     const { body, headers } = await serverOptions.backend.listPipelines({
       projectId,
-      ref,
+      ref: ref?.toString() || "",
     });
 
     res.set(headers);
@@ -358,7 +358,7 @@ const triggerPipeline = (getServerOptions: IServerOptionsForRequest) =>
 
     if (serverOptions.before) {
       await serverOptions.before({
-        ref,
+        ref: ref?.toString() || "",
       });
     }
 
@@ -371,7 +371,7 @@ const triggerPipeline = (getServerOptions: IServerOptionsForRequest) =>
 
     const { body, headers } = await serverOptions.backend.triggerPipeline({
       projectId,
-      ref,
+      ref: ref?.toString() || "",
     });
 
     res.set(headers);

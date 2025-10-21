@@ -10,6 +10,12 @@ import {
 } from "./interface";
 import { fetchAdvanced, FetchAdvancedResponseError } from "../fetchAdvanced";
 import { Readable } from "stream";
+import type {
+  GithubTreeFile,
+  GithubFile,
+  GithubCommitBody,
+  GithubBranch,
+} from "./github.type";
 
 const basePickHeaders = [
   "x-ratelimit-limit",
@@ -25,42 +31,7 @@ export interface IBackendGithubOptions {
   basePath?: string;
 }
 
-type GithubTreeFile = {
-  name: string;
-  path: string;
-  sha: string;
-  size: number;
-  url: string;
-  html_url: string;
-  git_url: string;
-  download_url: string;
-  type: string; // ex: file
-  _links: {
-    self: string;
-    git: string;
-    html: string;
-  };
-};
-type GithubFile = GithubTreeFile & {
-  content: string;
-  encoding: "base64";
-};
-type GithubCommitBody = {
-  message: string;
-  content: string; // base64 encoded
-  sha?: string; // required for update
-  branch?: string;
-  committer?: {
-    name: string;
-    email: string;
-    date?: string;
-  };
-  author?: {
-    name: string;
-    email: string;
-    date?: string;
-  };
-};
+// DOC : https://docs.github.com/fr/rest/repos/contents?apiVersion=2022-11-28
 
 export const backendGithub = (options: IBackendGithubOptions): IBackend => {
   const authHeaders: RequestInit["headers"] = {
@@ -278,7 +249,20 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
     },
 
     async showBranch({ projectId, ref }) {
-      throw new Error("Not implemented");
+      const { owner, repo } = getRepoParts(projectId);
+      const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
+        repo,
+      )}/branches/${encodeURIComponent(ref)}`;
+      const { body, headers } = await fetchAdvanced<GithubBranch>(url, {
+        baseUrl,
+        headers: authHeaders,
+        autoParseJson: true,
+        timeout: options.timeout,
+      });
+      return {
+        body,
+        headers: pick(headers, basePickHeaders),
+      };
     },
   };
 };

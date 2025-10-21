@@ -3,8 +3,7 @@
   "version": "0.8.13",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server",
-    "start:server": "ts-node-dev scripts/test-server.ts"
+    "start": "webpack-dev-server"
   },
   "dependencies": {
     "@babel/core": "^7.28.4",

@@ -28,7 +28,9 @@ const basePickHeaders = [
   "x-total-pages",
 ];
 
-const defaultGitlabOptions: Omit<IBackendGitlabOptions, "privateToken"> = {
+const defaultGitlabOptions: Required<
+  Pick<IBackendGitlabOptions, "host" | "timeout" | "version">
+> = {
   host: "https://gitlab.com",
   timeout: 30000,
   version: "v4",
@@ -286,9 +288,9 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
 
 const getBaseUrl = (options: IBackendGitlabOptions) => {
   const { host, version } = options || defaultGitlabOptions;
-  return [
+  return pathJoin(
     host || defaultGitlabOptions.host,
     "api",
     version || defaultGitlabOptions.version,
-  ].join("/");
+  );
 };

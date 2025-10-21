@@ -8,6 +8,7 @@ export * from "./auth/backendFile";
 
 export * from "./backend/gitlab";
 export * from "./backend/filesystem";
+export * from "./backend/github";
 
 export * from "./utils/loadFileList";
 export * from "./utils/loadFile";

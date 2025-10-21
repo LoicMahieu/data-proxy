@@ -23,6 +23,7 @@ export interface IBackendCommitOptions extends IBackendBaseOptions {
 export interface IBackendTreeFile {
   id: string;
   path: string;
+  name: string;
 }
 export interface IBackendFile {
   blob_id: string;

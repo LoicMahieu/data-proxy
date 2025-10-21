@@ -172,7 +172,7 @@ const tree = (getServerOptions: IServerOptionsForRequest) =>
     });
 
     res.set(headers);
-    res.send(body);
+    res.send(body.filter((file) => file.name !== ".empty"));
   });
 
 const readFile = (getServerOptions: IServerOptionsForRequest) =>

@@ -33,7 +33,7 @@ const apply = (app: Application) => {
     //   )} (${get(authData, "user.owner.guid")})`,
     // }),
     prefix: "",
-    projectId: process.env.GITLAB_PROJECT_ID || "",
+    projectId: process.env.GIT_PROJECT_ID || "",
 
     getPermissions: tokenData => {
       console.log("Get permissions for ", { tokenData });
@@ -53,13 +53,13 @@ const applyGitlab = (app: Application) => {
     auth: authOmnipartners({
       jwtSecret: "xxxxxxxx",
       omnipartners: omnipartners(
-        JSON.parse(process.env.OMNIPARTNERS_CONFIG || ""),
+        JSON.parse(process.env.CLIXRAY_CONFIG || ""),
       ),
       // verifyUser: verifyUserFromFileList({
       //   backend,
       //   path: `${process.env.DATASTORE_BASE_PATH}/adminUsers`,
-      //   projectId: process.env.GITLAB_PROJECT_ID || "",
-      //   ref: process.env.GITLAB_REF || "",
+      //   projectId: process.env.GIT_PROJECT_ID || "",
+      //   ref: process.env.GIT_REF || "",
       // }),
     }),
     beforeCommit: async (commit, authData) => ({
@@ -71,7 +71,7 @@ const applyGitlab = (app: Application) => {
       )} (${get(authData, "user.owner.guid")})`,
     }),
     prefix: "",
-    projectId: process.env.GITLAB_PROJECT_ID || "",
+    projectId: process.env.GIT_PROJECT_ID || "",
   });
 
   return app;

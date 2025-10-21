@@ -28,7 +28,7 @@ import { Button, CircularProgress } from "@mui/material";
 import { CheckCircle, HighlightOff } from "@mui/icons-material";
 
 const authProvider = createAuthProvider({
-  projectId: process.env.GITLAB_PROJECT_ID || "",
+  projectId: process.env.GIT_PROJECT_ID || "",
   host: process.env.REACT_ADMIN_DATA_API || "",
 });
 

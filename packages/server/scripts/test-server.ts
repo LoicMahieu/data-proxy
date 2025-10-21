@@ -8,6 +8,7 @@ import {
   backendFilesystem,
   backendGitlab,
   beforeCheckPermissions,
+  backendGithub,
 } from "../src";
 
 import {
@@ -22,7 +23,8 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
 
-const backendType: "gitlab" | "fs" = (process.env.BACKEND as any) || "fs";
+const backendType: "gitlab" | "fs" | "github" =
+  (process.env.BACKEND as any) || "fs";
 const authType: "file" | "clixray" | "baseMap" =
   (process.env.AUTH as any) || "clixray";
 const authShouldVerifyUser = process.env.AUTH_VERIF_USER === "1";
@@ -30,19 +32,29 @@ const authShouldVerifyUser = process.env.AUTH_VERIF_USER === "1";
 const JWTSECRET = "foobar";
 const gitInfo = {
   path: "data/users",
-  projectId: "LoicMahieu/test-react-admin",
-  ref: "master",
+  projectId: process.env.GIT_PROJECT_ID || "LoicMahieu/test-react-admin",
+  ref: process.env.GIT_REF || "master",
 };
 
 const backendTypeGitlab = backendGitlab({
   privateToken: process.env.GITLAB_PRIVATE_TOKEN || "",
+  host: process.env.GITLAB_HOST,
 });
 
 const backendTypeFs = backendFilesystem({
   cwd: join(__dirname, "../../react-admin-example"),
 });
 
-const backend = backendType === "gitlab" ? backendTypeGitlab : backendTypeFs;
+const backendTypeGithub = backendGithub({
+  privateToken: process.env.GITHUB_PRIVATE_TOKEN || "",
+});
+
+const backend =
+  backendType === "gitlab"
+    ? backendTypeGitlab
+    : backendType === "github"
+    ? backendTypeGithub
+    : backendTypeFs;
 
 const authFile = authBackendFileList({
   backend,
@@ -55,9 +67,7 @@ const authFile = authBackendFileList({
 
 const authClixray = authOmnipartners({
   jwtSecret: JWTSECRET,
-  omnipartners: omnipartners(
-    JSON.parse(process.env.OMNIPARTNERS_CONFIG || "{}"),
-  ),
+  omnipartners: omnipartners(JSON.parse(process.env.CLIXRAY_CONFIG || "{}")),
   verifyUser: authShouldVerifyUser
     ? verifyUserFromFileList({
         backend,

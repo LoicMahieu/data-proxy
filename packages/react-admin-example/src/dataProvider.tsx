@@ -7,8 +7,8 @@ import {
 import { LocalforageCacheProvider } from "@react-admin-git-provider/common";
 
 const baseProviderOptions = {
-  projectId: process.env.GITLAB_PROJECT_ID || "",
-  ref: process.env.GITLAB_REF || "",
+  projectId: process.env.GIT_PROJECT_ID || "",
+  ref: process.env.GIT_REF || "",
   gitlabOptions: {
     host: process.env.REACT_ADMIN_DATA_API || "",
   },

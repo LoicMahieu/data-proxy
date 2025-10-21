@@ -1,4 +1,3 @@
-import got from "got";
 import pick from "lodash/pick";
 import { stringify } from "querystring";
 import { join as pathJoin } from "path";
@@ -11,6 +10,7 @@ import {
   IBackendTreeFile,
   IBackendTreeOptions,
 } from "./interface";
+import { fetchAdvanced } from "../fetchAdvanced";
 
 const basePickHeaders = [
   "ratelimit-limit",
@@ -51,7 +51,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
     path.replace(options.basePath || "", "").replace(/^\//, "");
   return {
     async tree({ projectId, page, path, ref }: IBackendTreeOptions) {
-      const { body, headers } = await got(
+      const { body, headers } = await fetchAdvanced(
         `/projects/${encodeURIComponent(projectId)}/repository/tree?` +
           stringify({
             page,
@@ -63,7 +63,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           headers: {
             "Private-Token": options.privateToken,
           },
-          json: true,
+          autoParseJson: true,
           timeout: options.timeout,
         },
       );
@@ -79,7 +79,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
       };
     },
     async readFile({ projectId, ref, file }: IBackendReadFileOptions) {
-      const { body, headers } = await got(
+      const { body, headers } = await fetchAdvanced(
         `/projects/${encodeURIComponent(
           projectId,
         )}/repository/files/${encodeURIComponent(appendBasePath(file))}?` +
@@ -91,7 +91,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           headers: {
             "Private-Token": options.privateToken,
           },
-          json: true,
+          autoParseJson: true,
           timeout: options.timeout,
         },
       );
@@ -113,24 +113,25 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
       };
     },
     async readFileRaw({ projectId, ref, file }: IBackendReadFileOptions) {
-      return got.stream(
-        `/projects/${encodeURIComponent(
-          projectId,
-        )}/repository/files/${encodeURIComponent(appendBasePath(file))}/raw?` +
-          stringify({
-            ref,
-          }),
-        {
-          baseUrl: getBaseUrl(options),
-          headers: {
-            "Private-Token": options.privateToken,
-          },
-          timeout: options.timeout,
-        },
-      );
+      throw new Error("Not implemented");
+      // return fetchAdvanced.stream(
+      //   `/projects/${encodeURIComponent(
+      //     projectId,
+      //   )}/repository/files/${encodeURIComponent(appendBasePath(file))}/raw?` +
+      //     stringify({
+      //       ref,
+      //     }),
+      //   {
+      //     baseUrl: getBaseUrl(options),
+      //     headers: {
+      //       "Private-Token": options.privateToken,
+      //     },
+      //     timeout: options.timeout,
+      //   },
+      // );
     },
     async headFile({ projectId, ref, file }: IBackendReadFileOptions) {
-      const { headers } = await got(
+      const { headers } = await fetchAdvanced(
         `/projects/${encodeURIComponent(
           projectId,
         )}/repository/files/${encodeURIComponent(appendBasePath(file))}?` +
@@ -142,7 +143,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           headers: {
             "Private-Token": options.privateToken,
           },
-          json: true,
+          autoParseJson: true,
           method: "head",
           timeout: options.timeout,
         },
@@ -164,7 +165,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
       };
     },
     async commit({ projectId, commitBody }: IBackendCommitOptions) {
-      const { body, headers } = await got(
+      const { body, headers } = await fetchAdvanced(
         `/projects/${encodeURIComponent(projectId)}/repository/commits`,
         {
           baseUrl: getBaseUrl(options),
@@ -177,8 +178,9 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           },
           headers: {
             "Private-Token": options.privateToken,
+            "Content-Type": "application/json",
           },
-          json: true,
+          autoParseJson: true,
           method: "POST",
           timeout: options.timeout,
         },
@@ -191,7 +193,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
     },
 
     async listPipelines({ projectId, ref }: IBackendListPipelinesOptions) {
-      const { body, headers } = await got(
+      const { body, headers } = await fetchAdvanced(
         `/projects/${encodeURIComponent(projectId)}/pipelines?` +
           stringify({
             ref,
@@ -201,7 +203,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           headers: {
             "Private-Token": options.privateToken,
           },
-          json: true,
+          autoParseJson: true,
           timeout: options.timeout,
         },
       );
@@ -213,7 +215,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
     },
 
     async triggerPipeline({ projectId, ref }: IBackendListPipelinesOptions) {
-      const { body, headers } = await got(
+      const { body, headers } = await fetchAdvanced(
         `/projects/${encodeURIComponent(projectId)}/pipeline?` +
           stringify({
             ref,
@@ -223,7 +225,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           headers: {
             "Private-Token": options.privateToken,
           },
-          json: true,
+          autoParseJson: true,
           method: "POST",
           timeout: options.timeout,
         },
@@ -241,14 +243,14 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
     }: IBackendBaseOptions & {
       id: string;
     }) {
-      const { body, headers } = await got(
+      const { body, headers } = await fetchAdvanced(
         `/projects/${encodeURIComponent(projectId)}/pipelines/${id}`,
         {
           baseUrl: getBaseUrl(options),
           headers: {
             "Private-Token": options.privateToken,
           },
-          json: true,
+          autoParseJson: true,
           timeout: options.timeout,
         },
       );
@@ -260,7 +262,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
     },
 
     async showBranch({ projectId, ref }) {
-      const { body, headers } = await got(
+      const { body, headers } = await fetchAdvanced(
         `/projects/${encodeURIComponent(
           projectId,
         )}/repository/branches/${encodeURIComponent(ref)}?` +
@@ -272,7 +274,7 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
           headers: {
             "Private-Token": options.privateToken,
           },
-          json: true,
+          autoParseJson: true,
           timeout: options.timeout,
         },
       );

@@ -92,10 +92,6 @@ export function applyMiddlewares(
       res.status(err.output.statusCode).send(err.output.payload);
       return;
     }
-    if (err.gotOptions) {
-      res.status(err.statusCode).send(err.body);
-      return;
-    }
     next(err);
   };
 

@@ -6,17 +6,19 @@
   "license": "MIT",
   "scripts": {
     "test": "yarn lint && lerna run --stream --concurrency 1 test",
-    "lint": "tslint -p .",
+    "lint": "eslint .",
     "build": "lerna run --stream build",
-    "start": "lerna run --stream --no-sort start"
+    "start": "env-cmd -- lerna run --stream --no-sort start"
   },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
-    "lerna": "^8.1.2",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^5.4.3"
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "env-cmd": "^11.0.0",
+    "eslint": "^9.38.0",
+    "lerna": "^9.0.0",
+    "typescript": "^5.9.3"
   }
 }

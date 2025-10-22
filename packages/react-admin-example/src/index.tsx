@@ -5,4 +5,6 @@ import App from "./App";
 const root = document.createElement("div");
 document.body.appendChild(root);
 
-ReactDOM.render(<App />, root);
+import { createRoot } from "react-dom/client";
+const reactRoot = createRoot(root);
+reactRoot.render(<App />);

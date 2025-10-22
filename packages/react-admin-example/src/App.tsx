@@ -28,7 +28,7 @@ import { Button, CircularProgress } from "@mui/material";
 import { CheckCircle, HighlightOff } from "@mui/icons-material";
 
 const authProvider = createAuthProvider({
-  projectId: process.env.GITLAB_PROJECT_ID || "",
+  projectId: process.env.GIT_PROJECT_ID || "",
   host: process.env.REACT_ADMIN_DATA_API || "",
 });
 
@@ -161,12 +161,7 @@ export const PipelineList = (props: ListProps) => (
 );
 
 const App = () => (
-  <Admin
-    dataProvider={dataProvider}
-    authProvider={(type, { username, password } = {}) =>
-      authProvider(type, { login: username, password })
-    }
-  >
+  <Admin dataProvider={dataProvider} authProvider={authProvider()}>
     {(permissions) => {
       return [
         <Resource

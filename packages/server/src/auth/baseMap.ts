@@ -3,7 +3,7 @@ import { authBase, IAuthBackend, IAuthBaseOptions } from "./base";
 
 export interface IAuthBaseMapOptions extends Omit<IAuthBaseOptions, "check" | "verifyPassword"> {
   authMap: IAuthMap | (() => Promise<IAuthMap>);
-  disableCheck: boolean;
+  disableCheck?: boolean;
 }
 
 interface IAuthMap {

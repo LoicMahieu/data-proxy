@@ -3,3 +3,5 @@ node_modules
 /packages/*/dist
 /packages/*/.rts2_cache_cjs
 /packages/*/.rts2_cache_esm
+packages/react-admin-example/.env
+.env

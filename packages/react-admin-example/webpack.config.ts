@@ -17,7 +17,7 @@ const config: WebpackConfiguration = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
     fallback: {
-      path: false,
+      path: require.resolve("path-browserify"),
       querystring: false,
     },
   },
@@ -35,13 +35,16 @@ const config: WebpackConfiguration = {
         GITLAB_OAUTH_BASE_URL: JSON.stringify(
           process.env.GITLAB_OAUTH_BASE_URL,
         ),
-        GITLAB_PROJECT_ID: JSON.stringify(process.env.GITLAB_PROJECT_ID),
-        GITLAB_REF: JSON.stringify(process.env.GITLAB_REF),
+        GIT_PROJECT_ID: JSON.stringify(process.env.GIT_PROJECT_ID),
+        GIT_REF: JSON.stringify(process.env.GIT_REF),
         REACT_ADMIN_DATA_API: "/admin/",
         GITLAB_DATA_BASE_PATH: JSON.stringify(
           process.env.GITLAB_DATA_BASE_PATH || "data",
         ),
       },
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
     }),
   ],
   devServer: {

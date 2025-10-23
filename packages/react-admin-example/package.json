@@ -1,6 +1,6 @@
 {
   "name": "@data-proxy/react-admin-example",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server"
@@ -27,7 +27,7 @@
     "webpack-dev-server": "^5.2.2"
   },
   "devDependencies": {
-    "@data-proxy/server-auth-omnipartners": "^1.0.0",
+    "@data-proxy/server-auth-omnipartners": "^1.0.1",
     "@types/fs-extra": "^11.0.4",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",

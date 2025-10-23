@@ -1,7 +1,6 @@
 import fs from "fs-extra";
 import hasha from "hasha";
 import path from "path";
-import { v4 as uuid } from "uuid";
 import { ICommitAction } from "../types";
 import {
   IBackend,
@@ -11,6 +10,11 @@ import {
   IBackendTreeOptions,
 } from "./interface";
 import { notFound } from "@hapi/boom";
+import crypto from "crypto";
+
+const uuid = () => {
+  return crypto.randomUUID();
+};
 
 const fileNotFoundError = (filePath: string) =>
   notFound("File does not exists", {
@@ -91,7 +95,9 @@ export const backendFilesystem = (
 
     const files = await fs.readdir(absBasePath);
     const treeFiles = await Promise.all(
-      files.map(fileName => fileToTree(path.join(basePath, fileName), options)),
+      files.map((fileName) =>
+        fileToTree(path.join(basePath, fileName), options),
+      ),
     );
 
     return {
@@ -169,7 +175,7 @@ export const backendFilesystem = (
 
   async commit({ projectId, commitBody }: IBackendCommitOptions) {
     await Promise.all(
-      commitBody.actions.map(action => doCommitAction(action, options)),
+      commitBody.actions.map((action) => doCommitAction(action, options)),
     );
     return {
       body: {

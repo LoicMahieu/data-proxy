@@ -41,13 +41,14 @@ export const fetchAdvanced = async <T = any, B = Record<string, any> | string>(
           ? bodyGiven
           : JSON.stringify(bodyGiven),
     });
+    const responseClone = response.clone();
     if (!response.ok) {
       console.error(
         `Error HTTP: ${response.status} ${response.statusText} for ${url}`,
       );
       throw new FetchAdvancedResponseError(
         `Error HTTP: ${response.status} ${response.statusText} for ${url}`,
-        response,
+        responseClone,
       );
     }
 
@@ -62,7 +63,7 @@ export const fetchAdvanced = async <T = any, B = Record<string, any> | string>(
       headers: Object.fromEntries(response.headers.entries()),
       status: response.status,
       statusText: response.statusText,
-      response,
+      response: responseClone,
     };
   } catch (error) {
     if ((error as any).name === "AbortError") {

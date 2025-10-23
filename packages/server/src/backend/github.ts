@@ -16,6 +16,7 @@ import type {
   GithubCommitBody,
   GithubBranch,
 } from "./github.type";
+import { join as pathJoin } from "path";
 
 const basePickHeaders = [
   "x-ratelimit-limit",
@@ -25,7 +26,6 @@ const basePickHeaders = [
 ];
 
 export interface IBackendGithubOptions {
-  host?: string;
   timeout?: number;
   privateToken: string;
   basePath?: string;
@@ -46,13 +46,17 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
     const [owner, repo] = projectId.split("/");
     return { owner, repo };
   };
+  const appendBasePath = (path: string) =>
+    options.basePath ? pathJoin(options.basePath, path) : path;
+  const removeBasePath = (path: string) =>
+    path.replace(options.basePath || "", "").replace(/^\//, "");
 
   return {
     async tree({ projectId, path, ref }: IBackendTreeOptions) {
       const { owner, repo } = getRepoParts(projectId);
       const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
         repo,
-      )}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(ref)}`;
+      )}/contents/${encodeURIComponent(appendBasePath(path))}`;
       const { body, headers } = await fetchAdvanced<GithubTreeFile[]>(url, {
         headers: authHeaders,
         autoParseJson: true,
@@ -65,7 +69,10 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
         name: entry.name,
       }));
       return {
-        body: tree,
+        body: tree.map((file) => ({
+          ...file,
+          path: removeBasePath(file.path),
+        })),
         headers: pick(headers, basePickHeaders),
       };
     },
@@ -74,7 +81,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       const { owner, repo } = getRepoParts(projectId);
       const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
         repo,
-      )}/contents/${encodeURIComponent(file)}?ref=${encodeURIComponent(ref)}`;
+      )}/contents/${encodeURIComponent(appendBasePath(file))}`;
       const { body, headers } = await fetchAdvanced<GithubFile>(url, {
         headers: authHeaders,
         autoParseJson: true,
@@ -96,7 +103,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       const { owner, repo } = getRepoParts(projectId);
       const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
         repo,
-      )}/contents/${encodeURIComponent(file)}?ref=${encodeURIComponent(ref)}`;
+      )}/contents/${encodeURIComponent(appendBasePath(file))}`;
       const { body } = await fetchAdvanced<GithubFile>(url, {
         headers: authHeaders,
         autoParseJson: true,
@@ -130,7 +137,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       const { owner, repo } = getRepoParts(projectId);
       const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
         repo,
-      )}/contents/${encodeURIComponent(file)}?ref=${encodeURIComponent(ref)}`;
+      )}/contents/${encodeURIComponent(appendBasePath(file))}`;
       const { headers } = await fetchAdvanced<GithubFile>(url, {
         headers: authHeaders,
         method: "head",
@@ -146,7 +153,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       const { owner, repo } = getRepoParts(projectId);
       const responses: any[] = [];
       for (const action of commitBody.actions) {
-        const targetPath = action.file_path;
+        const targetPath = appendBasePath(action.file_path);
         const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
           repo,
         )}/contents/${encodeURIComponent(targetPath)}`;

@@ -46,4 +46,6 @@ export interface ICommitBody {
   commit_message: string;
   author_email?: string;
   author_name?: string;
+  committer_email?: string;
+  committer_name?: string;
 }

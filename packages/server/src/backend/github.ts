@@ -187,7 +187,14 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
               method: "PUT",
               body: {
                 message: commitBody.commit_message,
-                committer: commitBody.author_email
+                // Default committer the authenticated user by the token used
+                committer: commitBody.committer_email
+                  ? {
+                      name: commitBody.committer_name || "",
+                      email: commitBody.committer_email,
+                    }
+                  : undefined,
+                author: commitBody.author_email
                   ? {
                       name: commitBody.author_name || "",
                       email: commitBody.author_email,

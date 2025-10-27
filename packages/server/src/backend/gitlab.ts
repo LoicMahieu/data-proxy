@@ -10,7 +10,8 @@ import {
   IBackendTreeFile,
   IBackendTreeOptions,
 } from "./interface";
-import { fetchAdvanced } from "../fetchAdvanced";
+import { fetchAdvanced, FetchAdvancedResponseError } from "../fetchAdvanced";
+import { Readable } from "stream";
 
 const basePickHeaders = [
   "ratelimit-limit",
@@ -113,22 +114,34 @@ export const backendGitlab = (options: IBackendGitlabOptions): IBackend => {
       };
     },
     async readFileRaw({ projectId, ref, file }: IBackendReadFileOptions) {
-      throw new Error("Not implemented");
-      // return fetchAdvanced.stream(
-      //   `/projects/${encodeURIComponent(
-      //     projectId,
-      //   )}/repository/files/${encodeURIComponent(appendBasePath(file))}/raw?` +
-      //     stringify({
-      //       ref,
-      //     }),
-      //   {
-      //     baseUrl: getBaseUrl(options),
-      //     headers: {
-      //       "Private-Token": options.privateToken,
-      //     },
-      //     timeout: options.timeout,
-      //   },
-      // );
+      const url =
+        `/projects/${encodeURIComponent(
+          projectId,
+        )}/repository/files/${encodeURIComponent(appendBasePath(file))}/raw?` +
+        stringify({
+          ref,
+        });
+      try {
+        const { response } = await fetchAdvanced(url, {
+          baseUrl: getBaseUrl(options),
+          headers: {
+            "Private-Token": options.privateToken,
+          },
+          timeout: options.timeout,
+        });
+        if (!response.body) {
+          throw new Error("Failed to fetch file: no body to stream");
+        }
+
+        const nodeStream = Readable.fromWeb(response.body as any);
+        return nodeStream;
+      } catch (error) {
+        if (error instanceof FetchAdvancedResponseError) {
+          // consume and close body
+          await error.response.arrayBuffer();
+        }
+        throw error;
+      }
     },
     async headFile({ projectId, ref, file }: IBackendReadFileOptions) {
       const { headers } = await fetchAdvanced(

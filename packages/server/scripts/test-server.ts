@@ -46,7 +46,16 @@ const backendTypeFs = backendFilesystem({
 });
 
 const backendTypeGithub = backendGithub({
-  privateToken: process.env.GITHUB_PRIVATE_TOKEN || "",
+  // privateToken: process.env.GITHUB_PRIVATE_TOKEN || "",
+  appToken: {
+    appId: process.env.GITHUB_APP_ID || "",
+    privateKey:
+      (process.env.GITHUB_PRIVATE_KEY &&
+        Buffer.from(process.env.GITHUB_PRIVATE_KEY, "base64").toString(
+          "utf-8",
+        )) ||
+      "",
+  },
 });
 
 const backend =
@@ -58,9 +67,6 @@ const backend =
 
 const authFile = authBackendFileList({
   backend,
-  // authMap: {
-  //   loic: "$2b$10$4Dj1OSSTi4WwIRjbVtbYlupzpNPTjsmqkwMRrIO1oBKGpRv3Zxx0S",
-  // }
   jwtSecret: JWTSECRET,
   ...gitInfo,
 });

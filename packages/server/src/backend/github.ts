@@ -17,6 +17,7 @@ import type {
   GithubBranch,
 } from "./github.type";
 import { join as pathJoin } from "path";
+import { getCachedGitHubToken } from "../auth/githubToken";
 
 const basePickHeaders = [
   "x-ratelimit-limit",
@@ -25,20 +26,34 @@ const basePickHeaders = [
   "x-github-request-id",
 ];
 
-export interface IBackendGithubOptions {
+export type IBackendGithubOptions = {
   timeout?: number;
-  privateToken: string;
   basePath?: string;
-}
+  privateToken?: string;
+  appToken?: {
+    appId: string;
+    privateKey: string;
+  };
+};
 
 // DOC : https://docs.github.com/fr/rest/repos/contents?apiVersion=2022-11-28
 
 export const backendGithub = (options: IBackendGithubOptions): IBackend => {
-  const authHeaders: RequestInit["headers"] = {
+  const authHeaders: (
+    projectId: string,
+  ) => Promise<RequestInit["headers"]> = async (projectId) => ({
     "X-GitHub-Api-Version": "2022-11-28",
     Accept: "application/vnd.github+json",
-    Authorization: `token ${options.privateToken}`,
-  };
+    Authorization: `token ${
+      options.appToken
+        ? await getCachedGitHubToken({
+            appId: options.appToken.appId,
+            privateKey: options.appToken.privateKey,
+            repository: projectId,
+          })
+        : options.privateToken || ""
+    }`,
+  });
   const baseUrl = "https://api.github.com";
 
   const getRepoParts = (projectId: string) => {
@@ -58,7 +73,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
         repo,
       )}/contents/${encodeURIComponent(appendBasePath(path))}`;
       const { body, headers } = await fetchAdvanced<GithubTreeFile[]>(url, {
-        headers: authHeaders,
+        headers: await authHeaders(projectId),
         autoParseJson: true,
         baseUrl,
         timeout: options.timeout,
@@ -83,7 +98,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
         repo,
       )}/contents/${encodeURIComponent(appendBasePath(file))}`;
       const { body, headers } = await fetchAdvanced<GithubFile>(url, {
-        headers: authHeaders,
+        headers: await authHeaders(projectId),
         autoParseJson: true,
         baseUrl,
         timeout: options.timeout,
@@ -105,7 +120,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
         repo,
       )}/contents/${encodeURIComponent(appendBasePath(file))}`;
       const { body } = await fetchAdvanced<GithubFile>(url, {
-        headers: authHeaders,
+        headers: await authHeaders(projectId),
         autoParseJson: true,
         baseUrl,
         timeout: options.timeout,
@@ -113,7 +128,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       try {
         const { response } = await fetchAdvanced(body.download_url, {
           headers: {
-            ...authHeaders,
+            ...(await authHeaders(projectId)),
             Accept: "application/vnd.github.v3.raw",
           },
           timeout: options.timeout,
@@ -139,7 +154,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
         repo,
       )}/contents/${encodeURIComponent(appendBasePath(file))}`;
       const { headers } = await fetchAdvanced<GithubFile>(url, {
-        headers: authHeaders,
+        headers: await authHeaders(projectId),
         method: "head",
         baseUrl,
         timeout: options.timeout,
@@ -165,7 +180,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
               const { body: getBody } = await fetchAdvanced<GithubFile>(
                 url + `?ref=${encodeURIComponent(commitBody.branch)}`,
                 {
-                  headers: authHeaders,
+                  headers: await authHeaders(projectId),
                   autoParseJson: true,
                   baseUrl,
                   timeout: options.timeout,
@@ -180,7 +195,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
           const { body } = await fetchAdvanced<GithubFile, GithubCommitBody>(
             url,
             {
-              headers: authHeaders,
+              headers: await authHeaders(projectId),
               autoParseJson: true,
               baseUrl,
               timeout: options.timeout,
@@ -213,7 +228,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
           const { body: getBody } = await fetchAdvanced<GithubFile>(
             url + `?ref=${encodeURIComponent(commitBody.branch)}`,
             {
-              headers: authHeaders,
+              headers: await authHeaders(projectId),
               autoParseJson: true,
               baseUrl,
               timeout: options.timeout,
@@ -228,7 +243,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
             )}/contents/${encodeURIComponent(targetPath)}`,
             {
               baseUrl,
-              headers: authHeaders,
+              headers: await authHeaders(projectId),
               method: "DELETE",
               body: {
                 message: commitBody.commit_message,
@@ -269,7 +284,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       )}/branches/${encodeURIComponent(ref)}`;
       const { body, headers } = await fetchAdvanced<GithubBranch>(url, {
         baseUrl,
-        headers: authHeaders,
+        headers: await authHeaders(projectId),
         autoParseJson: true,
         timeout: options.timeout,
       });

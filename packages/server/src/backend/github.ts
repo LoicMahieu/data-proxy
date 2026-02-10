@@ -203,9 +203,9 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
               body: {
                 message: commitBody.commit_message,
                 // Default committer the authenticated user by the token used
-                committer: commitBody.committer_email
+                committer: commitBody.committer_email && commitBody.committer_name
                   ? {
-                      name: commitBody.committer_name || "",
+                      name: commitBody.committer_name,
                       email: commitBody.committer_email,
                     }
                   : undefined,

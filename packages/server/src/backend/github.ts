@@ -71,7 +71,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       const { owner, repo } = getRepoParts(projectId);
       const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
         repo,
-      )}/contents/${encodeURIComponent(appendBasePath(path))}`;
+      )}/contents/${encodeURIComponent(appendBasePath(path))}?ref=${encodeURIComponent(ref)}`;
       const { body, headers } = await fetchAdvanced<GithubTreeFile[]>(url, {
         headers: await authHeaders(projectId),
         autoParseJson: true,
@@ -96,7 +96,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       const { owner, repo } = getRepoParts(projectId);
       const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
         repo,
-      )}/contents/${encodeURIComponent(appendBasePath(file))}`;
+      )}/contents/${encodeURIComponent(appendBasePath(file))}?ref=${encodeURIComponent(ref)}`;
       const { body, headers } = await fetchAdvanced<GithubFile>(url, {
         headers: await authHeaders(projectId),
         autoParseJson: true,
@@ -118,7 +118,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       const { owner, repo } = getRepoParts(projectId);
       const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
         repo,
-      )}/contents/${encodeURIComponent(appendBasePath(file))}`;
+      )}/contents/${encodeURIComponent(appendBasePath(file))}?ref=${encodeURIComponent(ref)}`;
       const { body } = await fetchAdvanced<GithubFile>(url, {
         headers: await authHeaders(projectId),
         autoParseJson: true,
@@ -152,7 +152,7 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
       const { owner, repo } = getRepoParts(projectId);
       const url = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
         repo,
-      )}/contents/${encodeURIComponent(appendBasePath(file))}`;
+      )}/contents/${encodeURIComponent(appendBasePath(file))}?ref=${encodeURIComponent(ref)}`;
       const { headers } = await fetchAdvanced<GithubFile>(url, {
         headers: await authHeaders(projectId),
         method: "head",

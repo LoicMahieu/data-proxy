@@ -217,8 +217,10 @@ export const backendGithub = (options: IBackendGithubOptions): IBackend => {
                   : undefined,
                 sha: currentSha,
                 branch: commitBody.branch,
-                // content to be base64 encoded
-                content: Buffer.from(action.content || "").toString("base64"),
+                content:
+                  action.encoding === "base64"
+                    ? action.content || ""
+                    : Buffer.from(action.content || "").toString("base64"),
               },
             },
           );

@@ -1,6 +1,6 @@
 {
   "name": "@data-proxy/server-auth-omnipartners",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "files": [
     "dist"
   ],
@@ -24,7 +24,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@data-proxy/server": "^1.0.10"
+    "@data-proxy/server": "^1.0.11"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.6.13",
@@ -34,5 +34,6 @@
   },
   "peerDependencies": {
     "omnipartners": "^2.21.0"
-  }
+  },
+  "gitHead": "87ac31fb3bae52bbeee8b17467ca92c63588a764"
 }

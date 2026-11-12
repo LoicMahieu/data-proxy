@@ -1,8 +1,10 @@
-import jwt, { SignOptions } from "jsonwebtoken";
+import { JwtSignOptions, signHs256Jwt, verifyHs256Jwt } from "./jwt";
+
+export type { JwtSignOptions };
 
 export interface IAuthBaseOptions {
   jwtSecret: string;
-  jwtSignOptions?: SignOptions;
+  jwtSignOptions?: JwtSignOptions;
 
   check: (login?: string) => Promise<boolean>;
   verifyPassword: (
@@ -36,17 +38,8 @@ const createAuthCheck = (options: IAuthBaseOptions) => async (
     return false;
   }
 
-  try {
-    data = jwt.verify(token, options.jwtSecret) as any;
-  } catch (err) {
-    if (
-      (err as Error).name !== "TokenExpiredError" &&
-      (err as Error).name !== "JsonWebTokenError" &&
-      (err as Error).name !== "NotBeforeError"
-    ) {
-      throw err;
-    }
-  }
+  const payload = await verifyHs256Jwt(token, options.jwtSecret);
+  data = payload as IAuthTokenData | undefined;
 
   if (
     typeof data === "undefined" ||
@@ -76,7 +69,7 @@ const createAuthLogin = (options: IAuthBaseOptions) => async (body: any) => {
     return;
   }
 
-  return jwt.sign(
+  return signHs256Jwt(
     {
       login,
       ...data,
